@@ -6,7 +6,7 @@ import Link from 'next/link'
 import axios from 'axios'
 
 const Hero = () => {
-    const [allCoins, setAllCoins] = React.useState([])
+    const [allCoins, setAllCoins] = React.useState<any[]>([])
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -30,18 +30,18 @@ const Hero = () => {
                 </div>
                 <div className="md:basis-1/2 md:py-20 ">
                     <div className="bg-black/50 dark:bg-white/20 py-10 px-10   space-y-4  w-full rounded-md">
-                        {allCoins.slice(0,7).map((coin, index) => (
+                        {allCoins.slice(0,7)?.map((coin, index) => (
                             <div key={index} className=' flex justify-between  cursor-pointer hover:bg-slate-700 p-1 space-x-7 rounded-md '>
                                 <div className='flex space-x-2'>
-                                    <Image src={coin?.image} width={20} height={20} alt={coin?.name} className='invert rounded-full'/>
-                                    <h2 className='font-bold text-white'>{coin?.symbol.toUpperCase()}</h2>
-                                    <h3 className='opacity-50'>{coin?.name}</h3>
+                                    <Image src={coin.image} width={20} height={20} alt={coin.name} className='invert rounded-full'/>
+                                    <h2 className='font-bold text-white'>{coin.symbol.toUpperCase()}</h2>
+                                    <h3 className='opacity-50'>{coin.name}</h3>
                                 </div>
                                 <div>
-                                    <p className='font-bold text-white'>${coin?.current_price}</p>
+                                    <p className='font-bold text-white'>${coin.current_price}</p>
                                 </div>
                                 <div>
-                                    <p className='font-bold text-amber-400'>{coin?.price_change_percentage_24h.toFixed(2)}%</p>
+                                    <p className='font-bold text-amber-400'>{coin.price_change_percentage_24h.toFixed(2)}%</p>
                                 </div>
 
                             </div>

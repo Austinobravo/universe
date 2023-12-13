@@ -114,22 +114,22 @@ const Navbar = ({}) => {
                     <>
                     <div className=" px-7 ">
                         <div className="flex space-x-4 items-center w-full">
+                            <ul className="flex gap-3  w-full">
                             {authlinks.map((link,index) => (
-                                <ul key={index}>
-                                    <Link href={link.href}>
-                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base text-white  rounded-md py-2 px-12 bg-black/50`}>{link.name}</li>
+                                    <Link  key={index} href={link.href} className="basis-1/2" >
+                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base text-white text-center  rounded-md py-2 px-12 w-full bg-black/50`}>{link.name}</li>
                                     </Link>
-                                </ul>
                             ))}
+                            </ul>
                         </div>
-                        <div className="flex flex-col pt-10 text-base space-y-5 w-full">
-                            {navlinks.map((link, index) => (
-                                <ul  key={index} >
-                                    <Link href={link.href}  >
-                                        <li className="flex space-x-2 hover:bg-black/40 hover:rounded-md py-2 px-4 items-center"><span><link.icon size={16}/></span> <span>{link.name}</span></li>
+                        <div className="flex flex-col pt-10 text-lg w-full">
+                                <ul>
+                                {navlinks.map((link, index) => (
+                                    <Link  key={index} href={link.href}  >
+                                        <li className="flex space-x-2 hover:bg-black/40 hover:rounded-md py-3 px-4 items-center"><span><link.icon size={16}/></span> <span>{link.name}</span></li>
                                     </Link>
+                                ))}
                                 </ul>
-                            ))}
                         </div>
                     </div>
 

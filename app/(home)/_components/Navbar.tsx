@@ -11,22 +11,22 @@ const Navbar = ({}) => {
     const [toggleSwitch, setToggleSwitch] = React.useState(false)
     const navlinks = [
         {
-            icon: <Bitcoin/>,
+            icon: Bitcoin,
             href: "",
             name: "Buy Crypto"
         },
         {
-            icon: <ShipWheel/>,
+            icon: ShipWheel,
             href: "",
             name: "Markets"
         },
         {
-            icon: <Users/>,
+            icon: Users,
             href: "",
             name: "About Us"
         },
         {
-            icon: <BookUser/>,
+            icon: BookUser,
             href: "",
             name: "Contact Us"
         },
@@ -49,7 +49,7 @@ const Navbar = ({}) => {
             <div className="flex space-x-2">
                 <div >
                     <Link href="/" >
-                        <Image src="/home/logo-no-background.png" width={100} height={0} alt="Logo"/>
+                        <Image src="/home/logo-no-background.png" width={100} height={1} alt="Logo"/>
                     </Link>
 
                 </div>
@@ -85,7 +85,7 @@ const Navbar = ({}) => {
                     <div >
                         {!toggle ? 
                             <Link href="/" >
-                                <Image src="/home/logo-no-background.png" width={100} height={0} alt="Logo"/>
+                                <Image src="/home/logo-no-background.png" width={100} height={1} alt="Logo"/>
                             </Link> 
                         :
                         <div className="border rounded-full py-1 pr-6 pl-1 cursor-pointer" >
@@ -113,20 +113,20 @@ const Navbar = ({}) => {
                 {toggle && (
                     <>
                     <div className=" px-7 ">
-                        <div className="flex justify-between items-center w-full">
+                        <div className="flex space-x-4 items-center w-full">
                             {authlinks.map((link,index) => (
-                                <ul>
+                                <ul key={index}>
                                     <Link href={link.href}>
-                                        <li className={`${link.name==="Register" && "!bg-amber-400 text-white "} text-base text-white  rounded-md py-2 px-20 bg-black/50`}>{link.name}</li>
+                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base text-white  rounded-md py-2 px-12 bg-black/50`}>{link.name}</li>
                                     </Link>
                                 </ul>
                             ))}
                         </div>
                         <div className="flex flex-col pt-10 text-base space-y-5 w-full">
                             {navlinks.map((link, index) => (
-                                <ul  >
+                                <ul  key={index} >
                                     <Link href={link.href}  >
-                                        <li className="flex space-x-5 hover:bg-black/40 hover:rounded-md py-2 px-4"><span>{link.icon}</span> <span>{link.name}</span></li>
+                                        <li className="flex space-x-2 hover:bg-black/40 hover:rounded-md py-2 px-4 items-center"><span><link.icon size={16}/></span> <span>{link.name}</span></li>
                                     </Link>
                                 </ul>
                             ))}

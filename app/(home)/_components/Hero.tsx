@@ -12,7 +12,6 @@ const Hero = () => {
         const fetchData = async () => {
             const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
             setAllCoins(response.data)
-            console.log(allCoins)
         }
         fetchData()
     })
@@ -29,9 +28,9 @@ const Hero = () => {
 
                 </div>
                 <div className="md:basis-1/2 md:py-20 ">
-                    <div className="bg-black/50 dark:bg-white/20 py-10 px-10   space-y-4  w-full rounded-md">
+                    <div className="bg-black/50 dark:bg-white/20 mx-auto py-10 px-5 space-y-4  w-full rounded-md">
                         {allCoins.slice(0,7)?.map((coin, index) => (
-                            <div key={index} className=' flex justify-between  cursor-pointer hover:bg-slate-700 p-1 space-x-7 rounded-md '>
+                            <div key={index} className=' flex justify-between  cursor-pointer hover:bg-slate-700 p-1 space-x-5 rounded-md '>
                                 <div className='flex space-x-2'>
                                     <Image src={coin.image} width={20} height={20} alt={coin.name} className='invert rounded-full'/>
                                     <h2 className='font-bold text-white'>{coin.symbol.toUpperCase()}</h2>
@@ -46,10 +45,15 @@ const Hero = () => {
 
                             </div>
                         ))}
-                        
+                        {allCoins.length == 0 ? 
+                            <p className='text-white opacity-50 text-center'>No coins listed yet</p>
+                        : 
                         <Link href="">
                             <p className='flex text-xs pt-5 items-center opacity-60'>View all coins <ChevronRight size={15}/></p>
                         </Link>
+                        
+                        }
+                        
 
                     </div>
 

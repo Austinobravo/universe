@@ -88,9 +88,9 @@ const Navbar = ({}) => {
                                 <Image src="/home/logo-no-background.png" width={100} height={1} alt="Logo"/>
                             </Link> 
                         :
-                        <div className="border rounded-full py-1 pr-6 pl-1 cursor-pointer" >
-                            <div style={{transform: `translateX(${toggleSwitch ? 0 : "20px"})`, transition: "transform 0.5s linear"}} onClick={() => setToggleSwitch(!toggleSwitch)}>
-                                <DarkModeButton size={20}/>
+                        <div className="border  rounded-full py-1 pr-6 pl-1 cursor-pointer" >
+                            <div className=" " style={{transform: `translateX(${toggleSwitch ? 0 : "20px"})`, transition: "transform 0.5s linear"}} onClick={() => setToggleSwitch(!toggleSwitch)}>
+                                <DarkModeButton size={17}/>
                             </div>
                         </div>
                         }

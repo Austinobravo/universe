@@ -1,3 +1,4 @@
+import Brief from "./_components/Brief";
 import Faq from "./_components/Faq";
 import Footer from "./_components/Footer";
 import Hero from "./_components/Hero";
@@ -10,12 +11,13 @@ export default function Home() {
 
   return (
     <main>
-      <Navbar/>
+
       <Hero/>
       <Slider/>
+      <Brief/>
       <Plans/>
       <Faq/>
-      <Footer/>
+
 
     </main>
   )

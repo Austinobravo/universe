@@ -23,7 +23,7 @@ const Faq = () => {
 
     return (
         <>
-        <section className="md:px-32 space-y-7 px-10 py-7 dark:bg-black dark:text-white">
+        <section className="md:px-32 space-y-7 px-10 py-20 dark:bg-black dark:text-white">
             <div className="text-center">
                 <h3 className="md:text-5xl text-2xl">Frequently Asked Questions</h3>
             </div>

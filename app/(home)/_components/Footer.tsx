@@ -13,12 +13,12 @@ const Footer = () => {
                     <div>
                         <form>
                             <input type="email" className="w-[200px] py-1  px-2 mr-2 focus:border-amber-400 border-2 dark:text-black  outline-none" placeholder="Enter your email" required/>
-                            <button type="submit" className="px-3 py-1 rounded-md font-bold text-white  bg-amber-400">Subscribe</button>
+                            <button type="submit" className="px-3 py-1 rounded-md  text-white  bg-amber-400">Subscribe</button>
                         </form>
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <p className="opacity-50  text-sm">&copy; {new Date().getFullYear()} Universe. All Rights Reserved.</p>
+                    <p className="opacity-50  text-sm">&copy; {new Date().getFullYear()} Universe. All Rights Reserved.</p> 
                     <div>
                         <p className="opacity-50 md:text-sm text-xs text-justify"><span className="underline">IMPORTANT DISCLAIMER:</span> All content provided herein our website, hyperlinked sites, associated applications, forums, blogs, social media accounts and other platforms (“Site”) is for your general information only, procured from third party sources. We make no warranties of any kind in relation to our content, including but not limited to accuracy and updatedness. No part of the content that we provide constitutes financial advice, legal advice or any other form of advice meant for your specific reliance for any purpose. Any use or reliance on our content is solely at your own risk and discretion. You should conduct your own research, review, analyse and verify our content before relying on them. Trading is a highly risky activity that can lead to major losses, please therefore consult your financial advisor before making any decision. No content on our Site is meant to be a solicitation or offer.</p>
                     </div>

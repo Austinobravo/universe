@@ -23,8 +23,8 @@ const Card = ({icon:Icon, heading, gain, min, max, href}: Props) => {
                     <p className="text-center dark:text-green-500 text-lg font-bold">{gain}.00%</p>
                 </div>
                 <div>
-                    <h3 className="text-2xl ">${min} <span className="text-xs">min</span></h3>
-                    <h3 className="text-2xl ">${max} <span className="text-xs">max</span></h3>
+                    <h3 className="text-2xl ">${min} <span className="text-xs opacity-80">min</span></h3>
+                    <h3 className="text-2xl ">${max} <span className="text-xs opacity-80">max</span></h3>
                 </div>
                 <div>
                     <Link href={href}>

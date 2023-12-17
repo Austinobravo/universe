@@ -22,7 +22,7 @@ const Navbar = ({}) => {
         },
         {
             icon: Users,
-            href: "",
+            href: "/about",
             name: "About Us"
         },
         {
@@ -33,11 +33,11 @@ const Navbar = ({}) => {
     ]
     const authlinks = [
         {
-            href: "",
+            href: "/signin",
             name: "Login"
         },
         {
-            href: "",
+            href: "/signup",
             name: "Register"
         },
 
@@ -45,7 +45,7 @@ const Navbar = ({}) => {
 
     return(
         <>
-        <nav className="bg-white  text-sm text-black dark:bg-black  border-b-2 shadow dark:text-white py-2 md:flex hidden items-center px-10 justify-between">
+        <nav  className="bg-white fixed w-full text-sm text-black dark:bg-black z-10 border-b-2 shadow dark:text-white py-2 md:flex hidden items-center px-10 justify-between">
             <div className="flex space-x-2">
                 <div >
                     <Link href="/" >
@@ -80,7 +80,7 @@ const Navbar = ({}) => {
             </div>
 
         </nav>
-            <nav className={`${toggle && 'h-screen'} md:hidden bg-white  text-sm text-black dark:bg-black/80  border-b-2 shadow dark:text-white`}>
+            <nav className={`${toggle && 'h-screen'} md:hidden z-10 fixed w-full bg-white  text-sm text-black dark:bg-black  border-b-2 shadow dark:text-white`}>
                 <div className="flex items-center justify-between w-full px-6">
                     <div >
                         {!toggle ? 
@@ -117,7 +117,7 @@ const Navbar = ({}) => {
                             <ul className="flex gap-3  w-full">
                             {authlinks.map((link,index) => (
                                     <Link  key={index} href={link.href} className="basis-1/2" >
-                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base text-white text-center  rounded-md py-2 px-12 w-full bg-black/50`}>{link.name}</li>
+                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base dark:text-white text-center bg-black/50  rounded-md py-2 px-12 w-full dark:bg-white/50`}>{link.name}</li>
                                     </Link>
                             ))}
                             </ul>

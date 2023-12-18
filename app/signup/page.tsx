@@ -56,6 +56,8 @@ const page = () => {
                         <button type="submit" className="px-3 py-1 rounded-md  text-white  bg-amber-400">Register</button>
                         <p>or</p>
                         <Link href="/signin" className="font-bold">Login</Link>
+                        <Link href="/admin" className="font-bold">Admin</Link>
+                        
                     </div>
                     
                 </form>

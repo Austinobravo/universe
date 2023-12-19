@@ -1,3 +1,4 @@
+"use client"
 import { Book, ChevronRight,  Users } from 'lucide-react'
 import React from 'react'
 
@@ -8,7 +9,7 @@ const page = () => {
         <h1 className='text-3xl font-bold opacity-80'>Dashboard</h1>
         <hr className='w-full text-base'/>
       </div>
-      <div className='flex gap-7'>
+      <div className='flex gap-7 flex-wrap md:flex-nowrap mb-12'>
         <div className='md:basis-2/3'>
           <div className="flex flex-wrap md:flex-nowrap text-white gap-4 mb-10">
             <div className='bg-sky-400 flex px-10 w-[350px]  py-20 rounded-md'>

@@ -11,7 +11,7 @@ const Footer = () => {
                         <p className="opacity-50">Get the latest crypto news, updates, and reports by subscribing to our free newsletter.</p>
                     </div>
                     <div>
-                        <form>
+                        <form className="flex flex-col md:flex-row space-y-1 ">
                             <input type="email" className="w-[200px] py-1  px-2 mr-2 focus:border-amber-400 border-2 dark:text-black  outline-none" placeholder="Enter your email" required/>
                             <button type="submit" className="px-3 py-1 rounded-md  text-white  bg-amber-400">Subscribe</button>
                         </form>

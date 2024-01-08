@@ -1,8 +1,72 @@
+"use client"
 import Link from 'next/link'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
+    const router = useRouter()
+    const [passwordError, setPasswordError] = useState("")
+    const  [user, setUser] = useState(
+        {
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: "",
+            confirm_password: ""
+        }
+    )
+
+    const onChange = (e: any) => {
+        e.preventDefault()
+        const {name, value} = e.target
+            // if (user.password !== user.confirm_password){
+            //     setPasswordError("Passwords don't match")
+            //     console.log("PasswordError",passwordError)
+            // }else{
+            //     setPasswordError("")
+            // }
+        setUser({...user, [name]:value})
+        
+    }
+
+    const onSubmit = async (e:any) => {
+        e.preventDefault()
+        const data = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            password: user.password,
+            confirm_password: user.confirm_password
+        }
+        console.log("data",data)
+        
+        try{
+          axios.post("/api/register", data)  
+          .then((response: any)=> {
+            console.log("User", response)
+            if( response.data.role === "Admin"){
+                router.push("/dashboard")
+            }else{
+                router.push("/user_dashboard")
+            } 
+
+            
+
+          })
+          .catch((error)=> {
+              console.error(`Signup Api Error: ${error}`)
+            
+          })
+          .finally(()=>{
+          })
+
+        }catch(error: any){
+            console.error(`Signup Error: ${error}`)
+        }
+
+    }
   return (
     <section >
         <div className='flex  h-[600px] w-full'>
@@ -17,33 +81,35 @@ const page = () => {
 
             </div>
             <div className='md:py-40 py-20 px-10 '>
-                <form className='space-y-5'>
+                <form className='space-y-5' onSubmit={(e)=>onSubmit(e)}>
                     <div>
                         <h1 className='text-2xl pb-2 opacity-80'>Create account</h1>
                     </div>
                     <div className='grid md:grid-cols-2 grid-cols-1 gap-3'>
                         <div>
                             <label htmlFor='firstname'></label>
-                            <input type='text' id='firstname' name='firstname'  placeholder="First Name" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            <input type='text' onChange={(e)=>onChange(e)} value={user.firstname} id='firstname' name='firstname'  placeholder="First Name" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
                         </div>
                         <div>
                             <label htmlFor='lastname'></label>
-                            <input type='text' id='lastname' name='lastname' placeholder="Last Name" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            <input type='text' onChange={(e)=>onChange(e)} value={user.lastname} id='lastname' name='lastname' placeholder="Last Name" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
                         </div>
 
                     </div>
                     <div>
                         <label htmlFor='email'></label>
-                        <input type='email' id='email' name='email' placeholder="Email" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                        <input type='email' onChange={(e)=>onChange(e)} value={user.email} id='email' name='email' placeholder="Email" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
                     </div>
                     <div className='grid md:grid-cols-2 grid-cols-1 -full gap-3'>
                         <div>
                             <label htmlFor='password'></label>
-                            <input type='password' id='password' name='password' placeholder="Password" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            <input type='password' onChange={(e)=>onChange(e)} value={user.password} id='password' name='password' placeholder="Password" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            {passwordError && <p>{passwordError}</p>}
                         </div>
                         <div>
                             <label htmlFor='confirm_password'></label>
-                            <input type='password' id='confirm_password' name='confirm_password' placeholder="Confirm password" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            <input type='password' onChange={(e)=>onChange(e)} value={user.confirm_password} id='confirm_password' name='confirm_password' placeholder="Confirm password" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            {passwordError && <p>{passwordError}</p>}
                         </div>
 
                     </div>
@@ -56,8 +122,6 @@ const page = () => {
                         <button type="submit" className="px-3 py-1 rounded-md  text-white  bg-amber-400">Register</button>
                         <p>or</p>
                         <Link href="/signin" className="font-bold">Login</Link>
-                        <Link href="/admin" className="font-bold">Admin</Link>
-                        
                     </div>
                     
                 </form>

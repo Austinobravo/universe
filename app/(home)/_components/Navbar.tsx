@@ -4,9 +4,13 @@ import Image from "next/image"
 import Link from "next/link"
 import DarkModeButton from "@/components/DarkModeButton"
 import { Bitcoin, BookUser, Menu, ShipWheel, Users, X } from "lucide-react"
+import { useSession, signOut } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 
 const Navbar = ({}) => {
+    const {data:session} = useSession()
+    const router = useRouter()
     const [toggle, setToggle] = React.useState(false)
     const [toggleSwitch, setToggleSwitch] = React.useState(false)
     const navlinks = [
@@ -43,9 +47,14 @@ const Navbar = ({}) => {
 
     ]
 
+    const logOut = async () => {
+        await signOut({redirect:false,callbackUrl: "/signin"})
+        router.push("/signin")
+    }
+
     return(
         <>
-        <nav  className="bg-white fixed w-full text-sm text-black dark:bg-black z-10 border-b-2 shadow dark:text-white py-2 md:flex hidden items-center px-10 justify-between">
+        <nav  className="bg-white fixed w-full text-sm text-black dark:bg-black z-[100] border-b-2 shadow dark:text-white py-2 md:flex hidden items-center px-10 justify-between">
             <div className="flex space-x-2">
                 <div >
                     <Link href="/" >
@@ -68,7 +77,18 @@ const Navbar = ({}) => {
                     {authlinks.map((link,index)=> (
                             <ul  key={index}>
                             <Link href={link.href}>
-                                <li className={`${link.name==="Register" && "bg-amber-400 text-white py-2 px-4 rounded-md"}`}>{link.name}</li>
+                                <li className={`${link.name==="Register" && "bg-amber-400 text-white py-2 px-4 rounded-md"}`}>
+                                    {session && link.name === "Login" ?
+                                        (
+                                            <span className="font-bold" onClick={logOut}>Logout</span>
+                                        )
+                                    :
+                                        (
+                                            <span>{link?.name}</span>
+                                        )
+                                    }
+                                    
+                                    </li>
                             </Link>
                             </ul>
                     ))}
@@ -80,7 +100,7 @@ const Navbar = ({}) => {
             </div>
 
         </nav>
-            <nav className={`${toggle && 'h-screen'} md:hidden z-10 fixed w-full bg-white  text-sm text-black dark:bg-black  border-b-2 shadow dark:text-white`}>
+            <nav className={`${toggle && 'h-screen'} md:hidden z-[100] fixed w-full bg-white  text-sm text-black dark:bg-black  border-b-2 shadow dark:text-white`}>
                 <div className="flex items-center justify-between w-full px-6">
                     <div >
                         {!toggle ? 
@@ -116,8 +136,18 @@ const Navbar = ({}) => {
                         <div className="flex space-x-4 items-center w-full">
                             <ul className="flex gap-3  w-full">
                             {authlinks.map((link,index) => (
-                                    <Link  key={index} href={link.href} className="basis-1/2" >
-                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base dark:text-white text-center bg-black/50  rounded-md py-2 px-12 w-full dark:bg-white/50`}>{link.name}</li>
+                                    <Link  key={index} href={link.href} className="basis-1/2" onClick={()=> setToggle(!toggle)}>
+                                        <li className={`${link.name==="Register" && "!bg-amber-400 "} text-base dark:text-white text-center bg-black/50  rounded-md py-2 px-12 w-full dark:bg-white/50`}>
+                                        {session && link.name === "Login" ?
+                                        (
+                                            <span onClick={logOut}>Logout</span>
+                                        )
+                                    :
+                                        (
+                                            <span>{link?.name}</span>
+                                        )
+                                    }    
+                                        </li>
                                     </Link>
                             ))}
                             </ul>

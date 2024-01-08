@@ -10,17 +10,17 @@ const page = () => {
         <h1 className='text-3xl font-bold opacity-80'>Dashboard</h1>
         <hr className='w-full text-base'/>
       </div>
-      <div className='flex gap-7 flex-wrap md:flex-nowrap mb-12'>
-        <div className='md:basis-2/3'>
+      <div className='flex gap-7 flex-wrap  md:flex-nowrap mb-12'>
+        <div className='md:basis-2/3 w-full'>
           <div className="flex flex-wrap md:flex-nowrap text-white gap-4 mb-10">
-            <div className='bg-sky-400 flex px-10 w-[350px]  py-20 rounded-md'>
+            <div className='bg-sky-400 flex px-10 md:w-[350px] w-full py-20 rounded-md'>
               <PiggyBank size={50}/>
               <div>
                 <span className="text-3xl">0</span>
                 <p>Withdrawals</p>
               </div>
             </div>
-            <div className="bg-pink-400  flex px-10 w-[350px]  py-20 rounded-md ">
+            <div className="bg-pink-400  flex px-10 md:w-[350px] w-full  py-20 rounded-md ">
               <Book size={50}/>
               <div>
                 <span className="text-xl">USD 0.00 </span>
@@ -41,13 +41,13 @@ const page = () => {
 
         </div>
         <div className="shadow-2xl w-full flex  flex-col">
-          <div className='border-b-2 space-y-2 pt-4 rounded-md  bg-gradient-to-tl from-violet-800 to-black text-white basis-1/2 px-3'>
+          <div className='border-b-2 space-y-2 pt-4 rounded-md  bg-gradient-to-tl from-violet-800 to-black text-white basis-1/2 px-3 py-5'>
               <h3 className="text-lg font-bold">Setup your payment</h3>
               <p className="text-xs">Please add a mode of payment</p>
               <button onClick={()=>setToggleForm(!toggleForm)} type="button" className="px-5 py-1 hover:bg-slate-400 border hov  text-white shadow-2xl  ">Setup</button>
           </div>
           <div className="flex flex-row gap-2 justify-center items-center">
-            <div className=" border-r-2 pr-2">
+            <div className=" border-r-2 pr-2 py-3">
               <span className="font-bold">USD 0.00</span>
               <p className="text-xs">Locked</p>
             </div>

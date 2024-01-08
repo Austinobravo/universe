@@ -11,15 +11,15 @@ const page = () => {
       </div>
       <div className='flex gap-7 flex-wrap md:flex-nowrap mb-12'>
         <div className='md:basis-2/3'>
-          <div className="flex flex-wrap md:flex-nowrap text-white gap-4 mb-10">
-            <div className='bg-sky-400 flex px-10 w-[350px]  py-20 rounded-md'>
+          <div className="flex flex-wrap md:flex-nowrap  text-white gap-4 mb-10">
+            <div className='bg-sky-400 flex px-10 md:w-[350px] w-full py-20 rounded-md'>
               <Users size={50}/>
               <div>
                 <span className="text-3xl">0</span>
                 <p>Registered Users</p>
               </div>
             </div>
-            <div className="bg-pink-400  flex px-10 w-[350px]  py-20 rounded-md ">
+            <div className="bg-pink-400  flex px-10 md:w-[350px] w-full py-20 rounded-md ">
               <Book size={50}/>
               <div>
                 <span className="text-xl">USD 0.00 </span>
@@ -39,8 +39,8 @@ const page = () => {
           </div>
 
         </div>
-        <div className="shadow-2xl w-full flex flex-col">
-          <div className='border-b-2 basis-2/3 flex flex-col items-center justify-center'>
+        <div className="shadow-2xl  w-full flex flex-col">
+          <div className='border-b-2 md:basis-2/3 py-5 flex flex-col items-center justify-center'>
               <h3 className="text-2xl">USD 0.00</h3>
               <p className="text-xs">Total deposits</p>
           </div>

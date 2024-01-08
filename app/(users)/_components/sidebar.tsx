@@ -41,6 +41,10 @@ const Sidebar = () => {
     const [current, setCurrent] = React.useState(0)
     const [active, setActive] = React.useState("")
     const [toggle, setToggle] = React.useState(false)
+
+    React.useEffect(() => {
+        
+    })
   return (
     <>
     <section>

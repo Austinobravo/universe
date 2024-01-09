@@ -1,9 +1,24 @@
 "use client"
+import {getUsers} from '@/lib/getDetails'
 import { ChevronRight, UserCog, UsersRound, X } from 'lucide-react'
 import React from 'react'
 
 const page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
+  const [allUsers, setAllUsers] = React.useState<any[]>([])
+  const [allAdmin, setAllAdmin] = React.useState<any[]>([])
+  React.useEffect(() => {
+    const data = async () => {
+      const users = await getUsers()
+      setAllUsers(users.data)
+      const admin =  users.data.filter((each: { role: string }) => {
+        return each.role === "Admin"
+      })
+      setAllAdmin(admin)
+      console.log(allUsers)
+    } 
+    data()
+  }, [])
   return (
     <section>
       <div className='py-2 '>
@@ -19,8 +34,8 @@ const page = () => {
             <div className='bg-sky-400 space-x-2 flex px-10 w-full  py-20 rounded-md'>
               <UserCog size={50}/>
               <div>
-                <span className="text-xl">USD 0.00</span>
-                <p>Team members</p>
+                <span className="text-xl">{allAdmin.length}</span>
+                <p>{allAdmin.length > 1 ? "Admins" : "Admin"} </p>
               </div>
             </div>
             <div className="bg-pink-400 space-x-2 flex px-10 w-full  py-20 rounded-md ">

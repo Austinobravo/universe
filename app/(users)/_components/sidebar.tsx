@@ -40,7 +40,7 @@ const Sidebar = () => {
     const [itemsToggle, setItemsToggle] = React.useState(false)
     const [current, setCurrent] = React.useState(0)
     const [active, setActive] = React.useState("")
-    const [toggle, setToggle] = React.useState(false)
+    const [toggle, setToggle] = React.useState(true)
 
     React.useEffect(() => {
         

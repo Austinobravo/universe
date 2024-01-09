@@ -81,12 +81,16 @@ const Navbar = ({}) => {
                                     {session && link.name === "Login" ?
                                         (
                                             <span className="font-bold" onClick={logOut}>Logout</span>
-                                        )
-                                    :
-                                        (
-                                            <span>{link?.name}</span>
-                                        )
-                                    }
+                                            )
+                                            :
+                                            (
+                                                session?.user && link.name === "Register" ? (
+                                                    <Link href={session.user.role === "Admin" ? "/dashboard" : "/user_dashboard"} className="bg-amber-400 text-white py-2 px-4 rounded-md">{link.name = "Dashboard"}</Link>
+                                                ):(
+                                                    <span>{link?.name}</span>
+                                                )
+                                                )
+                                            }
                                     
                                     </li>
                             </Link>

@@ -1,9 +1,26 @@
 "use client"
-import { ChevronRight, Users, UsersRound, X } from 'lucide-react'
+import {getUsers} from '@/lib/getDetails'
+import {  Pencil, Users, UsersRound, X } from 'lucide-react'
 import React from 'react'
 
 const page = () => {
+
   const [toggleForm, setToggleForm] = React.useState(false)
+  const [allUsers, setAllUsers] = React.useState<any[]>([])
+  const [allAdmin, setAllAdmin] = React.useState<any[]>([])
+
+  React.useEffect(() => {
+    const data = async () => {
+      const users = await getUsers()
+      setAllUsers(users.data)
+      const admin =  users.data.filter((each: { role: string }) => {
+        return each.role === "Admin"
+      })
+      setAllAdmin(admin)
+      console.log(allUsers)
+    } 
+    data()
+  }, [])
   return (
     <section>
       <div className='py-2 '>
@@ -19,25 +36,45 @@ const page = () => {
             <div className='bg-sky-400 space-x-2 flex px-10 w-full  py-20 rounded-md'>
               <Users size={50}/>
               <div>
-                <span className="text-xl">USD 0.00</span>
-                <p>Registered Users</p>
+                <span className="text-xl">{allUsers?.length}</span>
+                <p>{allUsers.length > 1 ? "Registered Users" : "Registered User"}</p>
               </div>
             </div>
             <div className="bg-pink-400 space-x-2 flex px-10 w-full  py-20 rounded-md ">
               <UsersRound size={50}/>
               <div>
-                <span className="text-3xl">0 </span>
-                <p>New Users</p>
+                <span className="text-3xl">{allAdmin.length} </span>
+                <p>{allAdmin.length > 1 ? "Admins" : "Admin"}</p>
               </div>
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5 h-40 pt-5 rounded-md w-full">
+          <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
             <div className="flex justify-between items-center">
-            <h3>Today's Payouts</h3>
-            <span className="flex justify-between items-center">View all <ChevronRight size={15}/></span>
+            <div></div>
+            <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
 
             </div>
+            <table className='w-full'>
+              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
+                <th className=''>First Name</th>
+                <th className=''>Last Name</th>
+                <th className=''>Email</th>
+                <th className=''>Role</th>
+              </tr>
+              {allUsers.map((user, index) => (
+                 <div key={index}>
+                  <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between '>
+                    <td className=''>{user.firstName}</td>
+                    <td className=''>{user.lastName}</td>
+                    <td className=''>{user.email}</td>
+                    <td className=''>{user.role}</td>
+                  </tr>
+               </div>  
+
+               ))} 
+
+            </table>
       </div>
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">

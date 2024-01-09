@@ -1,13 +1,15 @@
 "use client"
 import { Book, ChevronRight,  PiggyBank, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
+  const {data:session} = useSession()
   return (
     <section>
       <div className='py-2'>
-        <h1 className='text-3xl font-bold opacity-80'>Dashboard</h1>
+        <h1 className='text-3xl font-bold opacity-80'>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1'>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
         <hr className='w-full text-base'/>
       </div>
       <div className='flex gap-7 flex-wrap  md:flex-nowrap mb-12'>
@@ -109,4 +111,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

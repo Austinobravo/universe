@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession, signOut } from 'next-auth/react'
-import { Loader } from 'lucide-react'
+import { Loader, Loader2 } from 'lucide-react'
 
 
 const page = () => {
@@ -28,12 +28,16 @@ const page = () => {
                 redirect: false,
                 
             })
+            console.log("data", data?.status)
+            console.log("seesion", session?.user)
+            console.log("status", status)
+
             if(data?.error) setError(data.error); else setError("")
 
-            // if (data?.status === 200 && status==="authenticated" && session?.user.role === "Admin"){
-            //     return router.push("/dashboard")
-            // }else if (data?.status === 200 &&  status==="authenticated" && session?.user.role === "User"){
-            //     return router.push("/user_dashboard")
+            // if (data?.status === 200  && session?.user.role === "Admin"){
+            //      router.push("/dashboard")
+            // }else if (data?.status === 200  && session?.user.role === "User"){
+            //      router.push("/user_dashboard")
             // }
             // console.log("log")
             
@@ -55,6 +59,7 @@ const page = () => {
         setUser({...user, [name]:value})
         
     }
+    
     React.useEffect(() => {
         // Check if the user is authenticated and has a role
         if (status === 'authenticated' && session?.user?.role) {
@@ -65,10 +70,12 @@ const page = () => {
                 router.push('/user_dashboard');
             }
         }
+        console.log("seesion", session?.user)
+            console.log("status", status)
     }, [status, session, router]);
   return (
     <section >
-        {status === "unauthenticated" ? (
+        {status === "unauthenticated" && (
             <div className='flex   h-[600px] w-full'>
                 <div className='dark:bg-gradient-to-tl bg-black from-purple-800 to-blue-800 md:basis-2/3 py-10 justify-between flex-col md:flex hidden  md:pl-10'>
                     <div className='space-y-7 '>
@@ -113,14 +120,22 @@ const page = () => {
                     </form>
                 </div>
             </div>
-        ):
-            (
-                <div className='flex flex-col items-center  space-y-2 py-5'>
-                    <p className='text-center text-2xl'>You are signed in</p>
-                    <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
-                </div>  
-            )
+        )
         }
+
+        {status === "loading" && (
+            <div className='flex flex-col items-center  space-y-2 py-5'>
+                    <p className='text-center text-2xl'><Loader2 className='animate-spin' size={60}/></p>
+                   
+            </div>  
+        )}
+
+        {status === "authenticated" && (
+            <div className='flex flex-col items-center  space-y-2 py-5'>
+                <p className='text-center text-2xl'>You are signed in</p>
+                <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
+            </div>  
+        )}
         
     </section>
   )

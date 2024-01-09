@@ -1,24 +1,44 @@
 "use client"
+import {getUsers} from '@/lib/getDetails'
 import { Book, ChevronRight,  Users } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import React from 'react'
 
 const page = () => {
+  const [allUsers, setAllUsers] = React.useState<any[]>([])
+  const [allAdmin, setAllAdmin] = React.useState<any[]>([])
+  const {data:session} = useSession()
+  React.useEffect(() => {
+    const data = async () => {
+      const users = await getUsers()
+      setAllUsers(users.data)
+      const admin =  users.data.filter((each: { role: string }) => {
+        return each.role === "Admin"
+      })
+      setAllAdmin(admin)
+      console.log(allUsers)
+    } 
+    data()
+  }, [])
   return (
     <section>
       <div className='py-2'>
-        <h1 className='text-3xl font-bold opacity-80'>Dashboard</h1>
+        <h1 className='text-3xl font-bold opacity-80'>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1'>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
         <hr className='w-full text-base'/>
       </div>
       <div className='flex gap-7 flex-wrap md:flex-nowrap mb-12'>
         <div className='md:basis-2/3'>
           <div className="flex flex-wrap md:flex-nowrap  text-white gap-4 mb-10">
+            <Link href="/users">
             <div className='bg-sky-400 flex px-10 md:w-[350px] w-full py-20 rounded-md'>
               <Users size={50}/>
               <div>
-                <span className="text-3xl">0</span>
-                <p>Registered Users</p>
+                <span className="text-3xl">{allUsers?.length}</span>
+                <p>{allUsers.length > 1 ? "Registered Users" : "Registered User"}</p>
               </div>
             </div>
+            </Link>
             <div className="bg-pink-400  flex px-10 md:w-[350px] w-full py-20 rounded-md ">
               <Book size={50}/>
               <div>

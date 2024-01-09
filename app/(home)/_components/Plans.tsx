@@ -1,4 +1,6 @@
+"use client"
 import Card from "@/components/Card"
+import { getInvestments } from "@/lib/getDetails"
 import { Bitcoin } from "lucide-react"
 import React from "react"
 
@@ -37,6 +39,15 @@ const items = [
     },
 ]
 const Plans = () => {
+  const [items, setAllItems] = React.useState<any[]>([])
+
+    React.useEffect(() => {
+        const data = async () => {
+          const investment = await getInvestments()
+          setAllItems(investment.data)
+        }
+        data()
+      })
 
 
     return (
@@ -46,9 +57,9 @@ const Plans = () => {
                 <h3 className="text-center  text-2xl md:text-5xl dark:text-white ">Why Investors keep investing?</h3>
             </div>
             <div className="grid md:grid-cols-4 grid-cols-1 gap-10 py-10 ">
-                {items.map((item, index) => (
+                {items?.map((item, index) => (
                     <div key={index}>
-                        <Card icon={item.icon} gain={item.gain} heading={item.heading} min={item.min} max={item.max} href={item.href}/>
+                        <Card icon={Bitcoin} gain={item.profit} heading={item.name} min={item.min} max={item.max} href={item.href}/>
                     </div>
 
                 ))}

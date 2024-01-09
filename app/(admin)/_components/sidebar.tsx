@@ -52,31 +52,30 @@ const sidelinks = [
         href: "/tickets"
     },
 ]
+interface Props{
+    func: () => void
+}
 
-const Sidebar = () => {
+const Sidebar = ({func}: Props) => {
     const router = useRouter()
     const pathname = usePathname()
     const [itemsToggle, setItemsToggle] = React.useState(false)
     const [current, setCurrent] = React.useState(0)
     const [active, setActive] = React.useState("")
-    const [toggle, setToggle] = React.useState(false)
+
   return (
     <>
     <section>
-        {!toggle ? 
-        <div className='h-[55rem] shadow-2xl bg-white w-60 border-r-2'>
-            <div className='flex  border-b-2 items-center space-x-2 py-4 ml-auto w-full cursor-pointer' onClick={() => setToggle(!toggle)}>
-                <X size={35}/>
-                {/* <Image src="/home/logo-no-background.png" width={100} height={100} alt="logo"/> */}
 
-            </div>
+        <div className='h-[55rem] shadow-2xl bg-white w-60 border-r-2'>
+         
                 <div className='space-y-6 pt-5 font-semibold shadow-none '>
                     {sidelinks.map((each, index) => {
                         const Icon = each.icon
                         return (
                             <div key={index}>
                                 <Link href={each.href}>
-                                    <div className={`${pathname === each.href  && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "} ${active === each.name && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "}  flex hover:bg-slate-500 py-2  px-3 justify-between`} onClick={()=>setActive("")}>
+                                    <div className={`${pathname === each.href  && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "} ${active === each.name && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "}  flex hover:bg-slate-500 py-2  px-3 justify-between`} onClick={()=>{setActive("")}}>
                                         <div className='flex gap-x-2'>
                                             <Icon/>
                                             <h2 className='flex'>{each.name} </h2>
@@ -87,7 +86,7 @@ const Sidebar = () => {
                                     {itemsToggle && current === index &&
                                     <div className={`flex-col flex pl-8 pt-4 gap-y-3 ${itemsToggle && 'bg-slate-500'}`}>
                                         {each.children?.map((child, index) => (
-                                            <div onClick={()=>{setActive(each.name), setItemsToggle(!itemsToggle)}}   className='hover:text-white'>
+                                            <div onClick={()=>{setActive(each.name), setItemsToggle(!itemsToggle), func()}}   className='hover:text-white'>
                                             <Link key={index} href={child.href} className='hover:text-white' >
                                                 {child.type} 
                                             </Link>
@@ -105,9 +104,7 @@ const Sidebar = () => {
 
                 </div>
         </div>
-            : 
-                <div className="pt-10 md:pl-5 cursor-pointer" onClick={()=> setToggle(!toggle)}><Menu size={30}/></div>
-            }
+
 
     </section>
     

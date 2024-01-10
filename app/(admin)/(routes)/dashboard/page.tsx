@@ -1,5 +1,5 @@
 "use client"
-import {getUsers} from '@/lib/getDetails'
+import {getDeposits, getUsers} from '@/lib/getDetails'
 import { Book, ChevronRight,  Users } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -8,6 +8,9 @@ import React from 'react'
 const page = () => {
   const [allUsers, setAllUsers] = React.useState<any[]>([])
   const [allAdmin, setAllAdmin] = React.useState<any[]>([])
+  const [allDeposits, setAllDeposits] = React.useState(0)
+  const [allPendingDeposits, setAllPendingDeposits] = React.useState(0)
+  const [allApprovedDeposits, setAllApprovedDeposits] = React.useState(0)
   const {data:session} = useSession()
   React.useEffect(() => {
     const data = async () => {
@@ -17,7 +20,42 @@ const page = () => {
         return each.role === "Admin"
       })
       setAllAdmin(admin)
-      console.log(allUsers)
+      const deposits = await getDeposits()
+
+      const totalDeposits = deposits.data?.reduce((total:any, each:any) =>
+      total.amount + each.amount
+      )
+      setAllDeposits(totalDeposits)
+      
+      const pendingDeposits = deposits.data.filter((each:any) => 
+        each.approved === false
+      )
+      if(pendingDeposits.length >=2 ){
+        const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
+         (total.amount + each.amount,0)
+        )
+        setAllPendingDeposits(pendingDepositsAmount)
+        
+      }else{
+        console.log("pend1", pendingDeposits[0].amount)
+        setAllPendingDeposits(pendingDeposits[0].amount || 0)
+      }
+      
+      
+      const approvedDeposits = deposits.data.filter((each:any) => 
+      each.approved === true
+      )
+      
+      if(approvedDeposits.length >=2){
+        const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
+         total.amount + each.amount
+        )
+        setAllApprovedDeposits(approvedDepositsAmount)
+      }else{
+        setAllApprovedDeposits(approvedDeposits[0]?.amount || 0)
+      }
+      
+
     } 
     data()
   }, [])
@@ -61,17 +99,17 @@ const page = () => {
         </div>
         <div className="shadow-2xl  w-full flex flex-col">
           <div className='border-b-2 md:basis-2/3 py-5 flex flex-col items-center justify-center'>
-              <h3 className="text-2xl">USD 0.00</h3>
+              <h3 className="text-2xl">USD {(allDeposits).toFixed(2)}</h3>
               <p className="text-xs">Total deposits</p>
           </div>
           <div className="flex flex-row gap-2 justify-center items-center">
             <div className=" border-r-2 pr-2">
-              <span className="font-bold">USD 0.00</span>
-              <p className="text-xs">Locked</p>
+              <span className="font-bold">USD {(allPendingDeposits).toFixed(2)}</span>
+              <p className="text-xs">Pending</p>
             </div>
             <div>
-              <span className="font-bold">USD 0.00</span>
-              <p className="text-xs">Inactive</p>
+              <span className="font-bold">USD {(allApprovedDeposits).toFixed(2)}</span>
+              <p className="text-xs">Approved</p>
             </div>
           </div>
         </div>

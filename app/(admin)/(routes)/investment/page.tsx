@@ -1,7 +1,7 @@
 "use client"
 import { getInvestments } from '@/lib/getDetails'
 import axios from 'axios'
-import { Banknote, ChevronRight, Loader, PiggyBank, X } from 'lucide-react'
+import { Banknote, ChevronRight, Loader, Pencil, PiggyBank, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import React from 'react'
 import toast from 'react-hot-toast'
@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 const page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [allInvestment, setAllInvestment] = React.useState([])
+  const [allInvestment, setAllInvestment] = React.useState<any[]>([])
   const {data:session} = useSession()
   const currentUserId = session?.user.id
   const [formData, setFormData] = React.useState({
@@ -60,6 +60,7 @@ const page = () => {
     const data = async () => {
       const investment = await getInvestments()
       setAllInvestment(investment.data)
+      console.log("all",allInvestment)
     }
     data()
   })
@@ -78,8 +79,8 @@ const page = () => {
             <div className='bg-sky-400 space-x-2 flex px-10 w-full  py-20 rounded-md'>
               <PiggyBank size={50}/>
               <div>
-                <span className="text-xl">USD 0.00</span>
-                <p>Based on investment plans</p>
+                <span className="text-2xl">{allInvestment[allInvestment.length -1]?.name}</span>
+                <p>Latest investment plan</p>
               </div>
             </div>
             <div className="bg-pink-400 space-x-2 flex px-10 w-full  py-20 rounded-md ">
@@ -91,16 +92,41 @@ const page = () => {
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5 h-40 pt-5 rounded-md w-full">
+          <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
             <div className="flex justify-between items-center">
-            <h3>Today's Payouts</h3>
-            <span className="flex justify-between items-center">View all <ChevronRight size={15}/></span>
+            <div></div>
+            <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
 
             </div>
-      </div>
+            <table className='w-full'>
+              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
+                <th className=''>Deposit type</th>
+                <th className=''>Minimum</th>
+                <th className=''>Maximum</th>
+                <th className=''>Profit</th>
+                <th className=''>Period</th>
+                <th className=''>Time/Date</th>
+              </tr>
+ 
+              {allInvestment.map((deposit, index) => (
+                 
+                  <tr key={index} className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between '>
+                    <td className=''>{deposit.name}</td>
+                    <td className=''>${deposit.min}</td>
+                    <td className=''>{deposit.max}</td>
+                    <td className=''>{deposit.profit}%</td>
+                    <td className=''>{deposit.period}</td>
+                    <td className=''>{deposit.createdAt}</td>
+                  </tr>
+               
+
+               ))} 
+
+            </table>
+          </div>
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed " >
-        <div className="bg-white shadow  rounded-md md:w-[600px] w-full md:-mt-[400px]">
+        <div className="bg-white shadow md:-mb-56 rounded-md md:w-[600px] w-full md:-mt-[400px]">
           <div className="p-3 cursor-pointer" onClick={()=>setToggleForm(!toggleForm)}>
           <X size={30} className="ml-auto " />
           </div>

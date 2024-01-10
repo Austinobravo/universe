@@ -5,7 +5,7 @@ export async function GET(){
     try{
         const investments = await dbConfig.investment.findMany({
             orderBy:{
-                name: "asc"
+                min: "asc"
             }
         })
         return NextResponse.json(investments)

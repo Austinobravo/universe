@@ -1,13 +1,22 @@
 "use client"
-import { Banknote, ChevronRight, Landmark, X } from 'lucide-react'
+import { Banknote, ChevronRight, Landmark, Loader, X } from 'lucide-react'
 import React from 'react'
 import Image from "next/image"
-import { getInvestments } from '@/lib/getDetails'
+import { getInvestments, getInvidualDeposits } from '@/lib/getDetails'
 import toast from 'react-hot-toast'
+import axios from 'axios'
+import { useSession } from 'next-auth/react'
+import dbConfig from '@/lib/dbConfig'
 const page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
+  const [togglePaymentForm, setTogglePaymentForm] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
   const [allInvestment, setAllInvestment] = React.useState<any[]>([])
-  const [formData,setFormData] = React.useState({name:"",min:"",max:"",period:"",profit:""})
+  const [allDeposit, setAllDeposit] = React.useState<any[]>([])
+  const [prevMin, setPrevMin] = React.useState(0)
+  const {data:session} = useSession()
+  const userId = session?.user.id
+  const [formData,setFormData] = React.useState({name:"",min:"",max:"",period:"",profit:"",userId:userId})
 
   const onChange = (event: any) => {
     event.preventDefault()
@@ -16,17 +25,29 @@ const page = () => {
       setFormData({...formData, [name]: parseInt(value)})
     }
   }
+
   
   const onSubmit = (event:any)=>{
     event.preventDefault()
 
     try{
-      
-          toast.success("Created Successfully")
+      console.log("in")
+      setIsLoading(true)
+      console.log("form",formData)
+      axios.post("/api/deposits", formData)
+      .then((response)=> {
+        if(response.status === 200) toast.success("Created Successfully"); setTogglePaymentForm(!togglePaymentForm); console.log("response", response)
+      })
+      .catch((error)=>{
+        console.error("Api error", error)
+      })
+      .finally(()=>{
+
+      })
         
-     
     }
     finally{
+      setIsLoading(false)
       
     }
 
@@ -36,6 +57,10 @@ const page = () => {
     const data = async () => {
       const investment = await getInvestments()
       setAllInvestment(investment.data)
+      const deposits = await getInvidualDeposits()
+      setAllDeposit(deposits.data)
+      
+
     }
     data()
   })
@@ -44,7 +69,7 @@ const page = () => {
       <div className='py-2 '>
         <div className="flex pb-2 justify-between items-center">
           <h1 className='text-3xl font-bold opacity-80'>Deposits</h1>
-          <button className="opacity-80 rounded-md border py-2 px-4" onClick={()=>setToggleForm(!toggleForm)}>Create plan</button>
+          
 
         </div>
         <hr className='w-full text-base'/>
@@ -81,13 +106,35 @@ const page = () => {
                   <p>$ {investment.max} <span className="text-xs">max</span></p>
                   <p>{investment.period}</p>
                   <div>
-                  <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" onClick={()=>{setFormData({...investment}), setToggleForm(!toggleForm)}} >Invest</button>
+                  <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" onClick={()=>{setFormData({...investment}), setToggleForm(!toggleForm), setPrevMin(investment.min)}} >Invest</button>
                   </div>
                 </div>
 
               ))}
               
             </div>
+        </div>
+        <div className='pb-5'>
+        <table className='w-full'>
+              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
+                <th className=''>Deposit type</th>
+                <th className=''>Amount</th>
+                <th className=''>Time/Date</th>
+                <th className=''>Approved</th>
+              </tr>
+              {allDeposit.map((deposit, index) => (
+                 <div >
+                  <tr className='flex flex-wrap border-2 px-2 py-2 md:flex-nowrap justify-between '>
+                    <td className=''>Mega</td>
+                    <td className=''>$150</td>
+                    <td className=''>14:00:01</td>
+                    <td className='bg-amber-400 py-1 px-4 text-xs text-white rounded-sm '>Pending</td>
+                  </tr>
+               </div>  
+
+                ))}  
+
+          </table>
         </div>
         {/* <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
           <Image src="/home/bitcoin.jpg" width={20} height={20} alt="bitcoin"/>
@@ -116,43 +163,43 @@ const page = () => {
         </div> */}
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
-        <div className="bg-white shadow  rounded-md md:w-[600px] w-full md:-mt-[400px]">
+        <div className="bg-white shadow  md:-mb-56  rounded-md md:w-[600px] w-full md:-mt-[400px]">
           <div className="p-3 cursor-pointer" onClick={()=>setToggleForm(!toggleForm)}>
           <X size={30} className="ml-auto " />
           </div>
-          <form className="py-7 px-10 space-y-7" onSubmit={onSubmit}>
+          <form className="py-7 px-10 space-y-7" >
               <div className="flex-col flex ">
                 <label htmlFor="" className="text-lg font-bold">Plan name</label>
-                <input type="text" value={formData.name} placeholder="Your investment plan" className="w-full border-slate-400 border-2 rounded-md p-2" readOnly/>
+                <input type="text" value={formData.name} placeholder="Your investment plan" className="w-full border-slate-400 bg-slate-400 border-2 rounded-md p-2" disabled/>
               </div>
               <div className="flex gap-3 flex-wrap md:flex-nowrap w-full">
                 <div className="flex-col  flex w-full ">
                   <label htmlFor=""  className="text-lg font-bold">Minimum Investment</label>
-                  <input type="number" name='min' value={formData.min} min={formData.min} max={formData.max} onChange={onChange} placeholder="Your minimum investment plan" className="w-full border-slate-400 border-2 rounded-md p-2"/>
+                  <input type="number" name='min' value={formData.min} min={prevMin} max={formData.max} onChange={onChange} placeholder="Your minimum investment plan" className="w-full border-slate-400 border-2 rounded-md p-2" />
                 </div>
                 <div className="flex-col flex w-full">
                   <label htmlFor=""  className="text-lg font-bold">Maximum Investment</label>
-                  <input type="number" value={formData.max} placeholder="Your maximum investment plan" className="w-full border-slate-400 border-2 rounded-md p-2"/>
+                  <input type="number" value={formData.max} placeholder="Your maximum investment plan" className="w-full border-slate-400 bg-slate-400 border-2 rounded-md p-2" disabled/>
                 </div>
               </div>
               <div  className="flex gap-3 flex-wrap md:flex-nowrap w-full">
                 <div className="flex-col flex w-full ">
                   <label htmlFor=""  className="text-lg font-bold">Profit</label>
                   <div className="flex">
-                    <input type="number" value={formData.profit} placeholder="Your profit plan" className="w-full border-slate-400 border-2 rounded-tl-md rounded-bl-md p-2"/>
+                    <input type="number" value={formData.profit} placeholder="Your profit plan" className="w-full border-slate-400 border-2 bg-slate-400 rounded-tl-md rounded-bl-md p-2" disabled/>
                     <span className="w-fit bg-slate-400 border-slate-400 border-2 rounded-tr-md rounded-br-md p-2">%</span>
                   </div>
                 </div>
                 <div className="flex-col flex w-full ">
                   <label htmlFor=""  className="text-lg font-bold">Interval Period</label>
-                  <select className="w-full border-slate-400 border-2 rounded-md p-2" value={formData.period}>
+                  <select className="w-full border-slate-400 bg-slate-400 border-2 rounded-md p-2" value={formData.period} disabled>
                       <option>Weekly</option>
                       <option>Monthly</option>
                       <option>Yearly</option>
                   </select>
               </div>
               </div>
-              <button type="submit" className="px-5 py-1 rounded-md  text-white  bg-amber-400">Save</button>
+              <button type="submit" onClick={(e)=>{ e.preventDefault(), setToggleForm(!toggleForm), setTogglePaymentForm(!togglePaymentForm)}} className="px-5 py-1 rounded-md flex text-white  bg-amber-400">Save and Continue <ChevronRight/></button>
           </form>
 
         </div>
@@ -160,6 +207,32 @@ const page = () => {
       </div>
   
       }
+      {togglePaymentForm &&
+        <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50  top-0 left-0 fixed ">
+        <div className="bg-white shadow  rounded-md md:-mb-56 md:w-[600px] w-full md:-mt-[400px]">
+          <div className="p-3 cursor-pointer" onClick={()=>setTogglePaymentForm(!togglePaymentForm)}>
+          <X size={30} className="ml-auto " />
+          </div>
+          <form className="py-7 px-10 space-y-7" onSubmit={onSubmit}>
+              <div className="flex-col flex ">
+                <label htmlFor="" className="text-lg font-bold">Make Bitcoin Payment to this Wallet.</label>
+                <p className="w-full border-slate-400 bg-slate-400 border-2 rounded-md p-2" > #tyhddhvc76hieucg68923pojdbjdh9c83</p>
+              </div>
+              <span>OR</span>
+              <div className="flex-col flex ">
+                <label htmlFor="" className="text-lg font-bold">Scan Wallet.</label>
+                <Image src="/home/bitcoin.jpg" alt="Bitcoin" width={200} height={50} className="  bg-slate-400  rounded-md p-2" /> 
+              </div>
+              
+              <button type="submit" className="px-5 py-1 rounded-md flex text-white  bg-amber-400">{isLoading ? (<><span className='flex'><Loader className='animate-spin' />Depositing...</span></> ) : "Deposit"}</button>
+          </form>
+
+        </div>
+        
+      </div>
+      }
+
+
       
     </section>
   )

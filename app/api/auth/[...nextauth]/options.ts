@@ -5,6 +5,7 @@ import type { NextAuthOptions } from "next-auth";
 import dbConfig from "@/lib/dbConfig";
 
 
+
 export const options:NextAuthOptions = {
     providers: [
         CredentialsProvider({

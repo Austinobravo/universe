@@ -63,19 +63,19 @@ const page = () => {
                 <th className=''>Role</th>
               </tr>
               {allUsers.map((user, index) => (
-                 <div key={index}>
-                  <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between '>
+                
+                  <tr key={index} className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between '>
                     <td className=''>{user.firstName}</td>
                     <td className=''>{user.lastName}</td>
                     <td className=''>{user.email}</td>
                     <td className=''>{user.role}</td>
                   </tr>
-               </div>  
+               
 
                ))} 
 
             </table>
-      </div>
+          </div>
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
         <div className="bg-white shadow  rounded-md md:w-[600px] w-full md:-mt-[400px]">

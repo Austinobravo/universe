@@ -24,6 +24,8 @@ model User{
   role UserRole @default(User)
 
   investment Investment[]
+  deposit Deposits[]
+  withdrawals Withdrawals[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
@@ -39,6 +41,31 @@ model Investment{
   user User @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
+
+  @@index([userId])
+}
+
+model Deposits{
+  id Int @id @default(autoincrement())
+  name String 
+  amount Int
+  approved Boolean @default(false)
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@index([userId])
+}
+
+model Withdrawals{
+  id Int @id @default(autoincrement())
+  userId Int
+  amount Int
+  approved Boolean @default(false)
+  user User @relation(fields: [userId], references: [id])
+  
 
   @@index([userId])
 }

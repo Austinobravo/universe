@@ -16,7 +16,8 @@ const page = () => {
   const [prevMin, setPrevMin] = React.useState(0)
   const {data:session} = useSession()
   const userId = session?.user.id
-  const [formData,setFormData] = React.useState({name:"",min:"",max:"",period:"",profit:"",userId:userId})
+  
+  const [formData,setFormData] = React.useState({name:"",min:"",max:"",period:"",profit:""})
 
   const onChange = (event: any) => {
     event.preventDefault()
@@ -27,16 +28,21 @@ const page = () => {
   }
 
   
-  const onSubmit = (event:any)=>{
+  const onSubmit = async (event:any)=>{
     event.preventDefault()
+    const data = {
+      name:formData.name,
+      min:formData.min,
+      userId:userId
+    }
 
     try{
-      console.log("in")
+      console.log("in", data)
       setIsLoading(true)
-      console.log("form",formData)
-      axios.post("/api/deposits", formData)
+      console.log("form",data)
+      await axios.post("/api/deposits", data)
       .then((response)=> {
-        if(response.status === 200) toast.success("Created Successfully"); setTogglePaymentForm(!togglePaymentForm); console.log("response", response)
+        if(response.status === 200) toast.success("Created Successfully"); setTogglePaymentForm(!togglePaymentForm)
       })
       .catch((error)=>{
         console.error("Api error", error)
@@ -79,14 +85,14 @@ const page = () => {
             <div className='bg-sky-400 space-x-2 flex px-10 w-full  py-20 rounded-md'>
               <Landmark size={50}/>
               <div>
-                <span className="text-xl">USD 0.00</span>
-                <p>Latest Deposits</p>
+                <span className="text-xl">USD {(allDeposit[(allDeposit.length) -1 ]?.amount.toFixed(2)) || (0).toFixed(2)}</span>
+                <p>Latest Deposit</p>
               </div>
             </div>
             <div className="bg-pink-400 space-x-2 flex px-10 w-full  py-20 rounded-md ">
               <Banknote size={50}/>
               <div>
-                <span className="text-3xl">0 </span>
+                <span className="text-3xl">{(allDeposit.length)} </span>
                 <p>All Deposits</p>
               </div>
             </div>
@@ -125,10 +131,10 @@ const page = () => {
               {allDeposit.map((deposit, index) => (
                  <div >
                   <tr className='flex flex-wrap border-2 px-2 py-2 md:flex-nowrap justify-between '>
-                    <td className=''>Mega</td>
-                    <td className=''>$150</td>
-                    <td className=''>14:00:01</td>
-                    <td className='bg-amber-400 py-1 px-4 text-xs text-white rounded-sm '>Pending</td>
+                    <td className=''>{deposit.name}</td>
+                    <td className=''>${deposit.amount}</td>
+                    <td className=''>{deposit.createdAt}</td>
+                    <td className={`${deposit.approved && "bg-green-400"} bg-amber-400 py-1 px-4 text-xs text-white rounded-sm `}>{deposit.approved ? "Approved" : "Pending"}</td>
                   </tr>
                </div>  
 

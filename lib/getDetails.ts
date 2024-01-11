@@ -1,6 +1,11 @@
 import axios from "axios"
-import dbConfig from "./dbConfig"
 
+export const getExistingEmail = async (value:string) => {
+    const users = await getUsers()
+    const existingEmail = users.data.find((each:any)=> each.email === value)
+    console.log("exis", existingEmail)
+    return existingEmail
+}
 export const getUsers = async () => {
     const apiCall = await axios.get("/api/users")
     return apiCall

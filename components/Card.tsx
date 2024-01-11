@@ -20,7 +20,7 @@ const Card = ({icon:Icon, heading, gain, min, max, href}: Props) => {
                     <h2 className="text-lg dark:text-white opacity-50 font-bold">{heading}</h2>
                 </div>
                 <div>
-                    <p className="text-center dark:text-green-500 text-lg font-bold">{gain}.00%</p>
+                    <p className="text-center dark:text-green-500 text-lg font-bold">{gain?.toFixed(2)}%</p>
                 </div>
                 <div>
                     <h3 className="text-2xl ">${min} <span className="text-xs opacity-80">min</span></h3>

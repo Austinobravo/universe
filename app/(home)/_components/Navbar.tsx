@@ -48,8 +48,10 @@ const Navbar = ({}) => {
     ]
 
     const logOut = async () => {
-        await signOut({redirect:false,callbackUrl: "/signin"})
-        router.push("/signin")
+        
+        const SignOut = await signOut({redirect:false})
+        console.log("sign", SignOut)
+        if(SignOut.url) router.push("/signin")
     }
 
     return(

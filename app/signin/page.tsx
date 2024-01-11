@@ -3,12 +3,21 @@ import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { signIn, useSession, signOut } from 'next-auth/react'
+import { signIn, useSession, signOut, getSession } from 'next-auth/react'
 import { Loader, Loader2 } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ErrorMessage } from '@hookform/error-message'
 
+const formSchema = z.object({
+    email: z.string().email("This field must be an email."),
+    password: z.string().min(6, "This field must have at least 6 characters.")
+})
 
 const page = () => {
     const router = useRouter()
+    const {register, formState:{isValid, errors}, } = useForm({mode: "all", resolver: zodResolver(formSchema)})
     const [isLoading, setIsLoading] = React.useState(false)
     const {data:session, status} = useSession()
     const [user , setUser] = React.useState({
@@ -16,42 +25,45 @@ const page = () => {
         password: ""
     })
     const [error, setError] = React.useState("")
-    
     const Login = async (e:any) => {
         e.preventDefault()
-        console.log("Login before")
-        try{
-            setIsLoading(true)
-            const data = await signIn('credentials', {
-                email: user.email,
-                password: user.password,
-                redirect: false,
+       
+            try{
+                setIsLoading(true)
+                const data = await signIn('credentials', {
+                    email: user.email,
+                    password: user.password,
+                    redirect: false,
+                    
+                })
+                console.log("data", data)
+    
+                if(data?.error) setError(data.error); else setError("")
+    
+                // Wait for the session to be updated
+                await getSession();
+    
+                // Access the updated session and check user role
+                const updatedSession = await getSession();
+                if (data?.status === 200 && updatedSession?.user?.role === "Admin") {
+                    return router.push("/dashboard");
+                } else if (data?.status === 200 && updatedSession?.user?.role === "User") {
+                    return router.push("/user_dashboard");
+                }
+    
+                console.log("log")
                 
-            })
-            console.log("data", data?.status)
-            console.log("seesion", session?.user)
-            console.log("status", status)
+            }catch(error){
+                console.error(error)
+            }finally{
+                setIsLoading(false)
+            }
 
-            if(data?.error) setError(data.error); else setError("")
-
-            // if (data?.status === 200  && session?.user.role === "Admin"){
-            //      router.push("/dashboard")
-            // }else if (data?.status === 200  && session?.user.role === "User"){
-            //      router.push("/user_dashboard")
-            // }
-            // console.log("log")
-            
-        }catch(error){
-            console.error(error)
-        }finally{
-            setIsLoading(false)
-        }
     }
 
-    const logOut = () => {
-        signOut({redirect:false,callbackUrl: "/signin"})
-    }
 
+    
+    
 
     const onChange = (e: any) => {
         e.preventDefault()
@@ -60,19 +72,22 @@ const page = () => {
         
     }
     
-    React.useEffect(() => {
-        // Check if the user is authenticated and has a role
-        if (status === 'authenticated' && session?.user?.role) {
-            // Redirect based on user role
-            if (session.user.role === 'Admin') {
-                router.push('/dashboard');
-            } else if (session.user.role === 'User') {
-                router.push('/user_dashboard');
-            }
-        }
-        console.log("seesion", session?.user)
-            console.log("status", status)
-    }, [status, session, router]);
+    const logOut = async () => {
+        const SignOut = await signOut({redirect:false})
+        if(SignOut.url) router.push("/signin")
+    }
+    
+    if(session?.user){
+        return(
+            <div className='flex flex-col items-center  space-y-2 py-5'>
+                <p className='text-center text-2xl'>You are signed in</p>
+                <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
+            </div>  
+
+        )
+    }
+
+
   return (
     <section >
         {status === "unauthenticated" && (
@@ -93,26 +108,34 @@ const page = () => {
                             <h1 className='text-2xl pb-2 opacity-80'>Enter your email and password</h1>
                         </div>
                         {error &&
-                            <div className='text-center rounded-md shadow-md'>
-                                <span className='text-red-500 py-3 px-1 w-full'>{error}</span>
+                            <div className='text-center bg-red-500 py-2 rounded-md shadow-md'>
+                                <span className='text-white w-full'>{error}</span>
                             </div>
                         }
+                        
                         <div>
                             <label htmlFor='email'></label>
-                            <input type='email' onChange={(e) => onChange(e)} value={user.email} id='email' name='email' placeholder="Email" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            <input type='email' {...register("email")} onChange={(e) => onChange(e)} value={user.email} id='email' name='email' placeholder="Email" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full' required/>
+                            <span className="text-red-500">
+                                <ErrorMessage name="email" errors={errors} />
+                            </span>
                         </div>
                         <div>
                             <label htmlFor='password'></label>
-                            <input type='password' onChange={(e) => onChange(e)} value={user.password} id='password' name='password' placeholder="Password" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full'/>
+                            <input type='password' {...register("password")} onChange={(e) => onChange(e)} value={user.password} id='password' name='password' placeholder="Password" className='border-2 border-black rounded-md p-1 focus:border-blue-400 outline-none w-full' minLength={6} required/>
+                            
+                            <span className="text-red-500">
+                                <ErrorMessage name="password" errors={errors} />
+                            </span>
                         </div>
 
                         <div className="flex gap-2">
                             <label htmlFor='agreement'></label>
-                            <input type='checkbox' id='agreement' name='agreement' className="cursor-pointer"/>
+                            <input type='checkbox' id='remember' name='remember' className="cursor-pointer" required/>
                             <p className="opacity-50">Keep me logged in.</p>
                         </div>
                         <div className="flex gap-5 items-center">
-                            <button type="submit" className={` px-3 py-1 rounded-md  text-white  bg-amber-400`}>{isLoading ? (<Loader className='animate-spin'/> ) : "Login"}</button>
+                            <button type="submit" className={` px-3 py-1 rounded-md  text-white  bg-amber-400`} disabled={isLoading}>{isLoading ? (<><Loader className='animate-spin'/> Login</>  ) : "Login"}</button>
                             <p>or</p>
                             <Link href="/signup" className="font-bold">Create Account</Link>
                         </div>
@@ -130,12 +153,12 @@ const page = () => {
             </div>  
         )}
 
-        {status === "authenticated" && (
+        {/* {status === "authenticated" && (
             <div className='flex flex-col items-center  space-y-2 py-5'>
                 <p className='text-center text-2xl'>You are signed in</p>
                 <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
             </div>  
-        )}
+        )} */}
         
     </section>
   )

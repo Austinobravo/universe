@@ -1,16 +1,77 @@
 "use client"
+import { getInvidualDeposits } from '@/lib/getDetails'
 import { Book, ChevronRight,  PiggyBank, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import React from 'react'
 
 const Page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
+  const [individualDeposit, setIndividualDeposit] = React.useState(0)
+  const [individualPendingDeposit, setIndividualPendingDeposit] = React.useState(0)
+  const [individualApprovedDeposit, setIndividualApprovedDeposit] = React.useState(0)
   const {data:session} = useSession()
+  console.log("id", session?.user.id)
+
+  React.useEffect(() => {
+    const data = async () => {
+      const individualDepositCall = await getInvidualDeposits()
+      
+      
+      if (individualDepositCall.data.length >= 2){
+        const totalDeposits = individualDepositCall.data.reduce((total:any, each:any) =>
+        (total + each.amount,0)
+        )
+        setIndividualDeposit(totalDeposits)
+      }else{
+        setIndividualDeposit(individualDepositCall.data[0]?.amount || 0)
+        
+      }
+      
+      const pendingDeposits = individualDepositCall.data.filter((each:any) => 
+        each.approved === false
+      )
+
+      if(pendingDeposits.length >=2 ){
+        const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
+        (total.amount + each.amount,0)
+        )
+        setIndividualPendingDeposit(pendingDepositsAmount)
+        
+      }else{
+        setIndividualPendingDeposit(pendingDeposits[0]?.amount || 0)
+      }
+      
+      
+      const approvedDeposits = individualDepositCall.data.filter((each:any) => 
+      each.approved === true
+      )
+      if(approvedDeposits.length >=2){
+        const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
+         total?.amount + each?.amount
+        )
+        setIndividualApprovedDeposit(approvedDepositsAmount)
+      }else{
+        setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
+      }
+      
+
+    } 
+    data()
+  }, [])
+
   return (
     <section>
-      <div className='py-2'>
-        <h1 className='text-3xl font-bold opacity-80'>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1'>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
-        <hr className='w-full text-base'/>
+      <div className='py-2 '>
+        <div className='flex flex-wrap md:flex-nowrap items-center justify-between'>
+          <div>
+            <h1 className='text-3xl font-bold opacity-80 '>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1 line-clamp-1 '>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
+          </div>
+          <div className=' flex items-center'>
+            <h2 className='text-sm  font-bold'>Remaining balance:<small className='text-[12px] text-black/50  pl-1'>$ 250</small></h2>
+            
+          </div>
+        </div>
+          <hr className='w-full text-base'/>
       </div>
       <div className='flex gap-7 flex-wrap  md:flex-nowrap mb-12'>
         <div className='md:basis-2/3 w-full'>
@@ -25,7 +86,7 @@ const Page = () => {
             <div className="bg-pink-400  flex px-10 md:w-[350px] w-full  py-20 rounded-md ">
               <Book size={50}/>
               <div>
-                <span className="text-xl">USD 0.00 </span>
+                <span className="text-xl">USD {(individualDeposit).toFixed(2)} </span>
                 <p>Deposits</p>
               </div>
             </div>
@@ -50,12 +111,12 @@ const Page = () => {
           </div>
           <div className="flex flex-row gap-2 justify-center items-center">
             <div className=" border-r-2 pr-2 py-3">
-              <span className="font-bold">USD 0.00</span>
-              <p className="text-xs">Locked</p>
+              <span className="font-bold">USD {(individualPendingDeposit).toFixed(2)}</span>
+              <p className="text-xs">Pending</p>
             </div>
             <div>
-              <span className="font-bold">USD 0.00</span>
-              <p className="text-xs">Inactive</p>
+              <span className="font-bold">USD {(individualApprovedDeposit).toFixed(2)}</span>
+              <p className="text-xs">Approved</p>
             </div>
           </div>
         </div>

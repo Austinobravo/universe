@@ -21,11 +21,10 @@ declare module 'next-auth'{
 declare module 'next-auth'{
     interface Session{
         user: {
-            id: number
+            id: number 
             firstname: string;
             lastname: string;
             email: string;
-            password: number;
             role: unknown;
         }     
     }

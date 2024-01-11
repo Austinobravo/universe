@@ -24,13 +24,14 @@ export const POST = async (req: Request) => {
     const user = await dbConfig.deposits.findMany({
         where:{
             userId:userId,
+            name:name
             
         }
     })
     console.log("user", user)
     
 
-    if(user.length >=1 || user[0].amount === min ) return new NextResponse("You've made this deposit", {status:400})
+    if(user.length >=1 ) return new NextResponse("You've made this deposit", {status:400})
     try{
         console.log("in")
         const deposit = await dbConfig.deposits.create({

@@ -3,8 +3,12 @@ import  bcrypt  from 'bcrypt';
 import type { NextAuthOptions } from "next-auth";
 
 import dbConfig from "@/lib/dbConfig";
+import { z } from 'zod';
 
-
+const loginUserSchema = z.object({
+    email: z.string().email("This field must be an email."),
+    password: z.string().min(6, "This must have at least 6 characters.")
+})
 
 export const options:NextAuthOptions = {
     providers: [
@@ -23,6 +27,7 @@ export const options:NextAuthOptions = {
                 },
             },
             async authorize(credentials:any){
+                // const {email, password} = loginUserSchema.parse(credentials)
                 if (!credentials.email || !credentials.password) throw new Error("Invalid credentials")
                 const user = await dbConfig.user.findUnique({
                     where: {
@@ -33,9 +38,10 @@ export const options:NextAuthOptions = {
                 
                 const isCorrectPassword = await bcrypt.compare(credentials.password, user.password)
                 if(!isCorrectPassword) throw new Error("Incorrect Password ")
-                console.log("User", user)
+                
+                const {password, ...UserWithOutPass} = user
 
-                return user
+                return UserWithOutPass
             }
         })
     ],
@@ -46,11 +52,10 @@ export const options:NextAuthOptions = {
     callbacks: {
         session: async ({session, token}) => {
             if (session.user){
-                session.user.id = token.id
-                session.user.firstname = token.firstname
-                session.user.lastname = token.lastname
-                session.user.email = token.email
-                session.user.password = token.password
+                session.user.id = token.id as number
+                session.user.firstname = token.firstname as string
+                session.user.lastname = token.lastname as string
+                session.user.email = token.email as string
                 session.user.role = token.role
             }
             return session
@@ -79,7 +84,8 @@ export const options:NextAuthOptions = {
         }
     },
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
+        maxAge: 24 * 60 * 60
     },
     secret:  process.env.NEXTAUTH_SECRET,
     debug: process.env.NODE_ENV === 'development'

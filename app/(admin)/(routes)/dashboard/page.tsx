@@ -12,6 +12,7 @@ const page = () => {
   const [allPendingDeposits, setAllPendingDeposits] = React.useState(0)
   const [allApprovedDeposits, setAllApprovedDeposits] = React.useState(0)
   const {data:session} = useSession()
+  console.log("id", session?.user.id)
   React.useEffect(() => {
     const data = async () => {
       const users = await getUsers()
@@ -21,11 +22,18 @@ const page = () => {
       })
       setAllAdmin(admin)
       const deposits = await getDeposits()
-
-      const totalDeposits = deposits.data?.reduce((total:any, each:any) =>
-      total.amount + each.amount
-      )
-      setAllDeposits(totalDeposits)
+      if (deposits.data.length >= 2){
+        const totalDeposits = deposits.data.reduce((total:any, each:any) =>
+        (total + each.amount,0)
+        )
+        setAllDeposits(totalDeposits)
+        console.log("all", totalDeposits)
+        console.log("alldep", deposits.data)
+        
+      }else{
+        setAllDeposits(deposits.data[0].amount || 0)
+        
+      }
       
       const pendingDeposits = deposits.data.filter((each:any) => 
         each.approved === false
@@ -37,7 +45,6 @@ const page = () => {
         setAllPendingDeposits(pendingDepositsAmount)
         
       }else{
-        console.log("pend1", pendingDeposits[0].amount)
         setAllPendingDeposits(pendingDeposits[0].amount || 0)
       }
       

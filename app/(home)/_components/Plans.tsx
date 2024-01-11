@@ -2,6 +2,7 @@
 import Card from "@/components/Card"
 import { getInvestments } from "@/lib/getDetails"
 import { Bitcoin } from "lucide-react"
+import { useSession } from "next-auth/react"
 import React from "react"
 
 const items = [
@@ -40,6 +41,7 @@ const items = [
 ]
 const Plans = () => {
   const [items, setAllItems] = React.useState<any[]>([])
+  const {data:session} = useSession()
 
     React.useEffect(() => {
         const data = async () => {
@@ -59,7 +61,7 @@ const Plans = () => {
             <div className="grid md:grid-cols-4 grid-cols-1 gap-10 py-10 ">
                 {items?.map((item, index) => (
                     <div key={index}>
-                        <Card icon={Bitcoin} gain={item.profit} heading={item.name} min={item.min} max={item.max} href={item.href}/>
+                        <Card icon={Bitcoin} gain={item.profit} heading={item.name} min={item.min} max={item.max} href={session?.user ? session?.user.role ==="User" ? "/user_deposits" : "/deposits" : "/signin"}/>
                     </div>
 
                 ))}

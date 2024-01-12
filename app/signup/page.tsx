@@ -38,7 +38,7 @@ const page = () => {
         }
     )
 
-    const getExistingEmail = async () => {}
+
 
     const onChange = (e: any) => {
         e.preventDefault()

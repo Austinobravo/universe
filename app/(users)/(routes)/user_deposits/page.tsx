@@ -40,7 +40,7 @@ const page = () => {
       console.log("in", data)
       setIsLoading(true)
       console.log("form",data)
-      await axios.post("/api/deposits", data)
+      await axios.post(`/api/deposits/${userId}`, data)
       .then((response)=> {
         if(response.status === 200) toast.success("Created Successfully"); setTogglePaymentForm(!togglePaymentForm)
       })
@@ -63,7 +63,7 @@ const page = () => {
     const data = async () => {
       const investment = await getInvestments()
       setAllInvestment(investment.data)
-      const deposits = await getInvidualDeposits()
+      const deposits = await getInvidualDeposits(session?.user.id)
       setAllDeposit(deposits.data)
       
 

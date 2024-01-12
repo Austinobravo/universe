@@ -3,7 +3,6 @@ import axios from "axios"
 export const getExistingEmail = async (value:string) => {
     const users = await getUsers()
     const existingEmail = users.data.find((each:any)=> each.email === value)
-    console.log("exis", existingEmail)
     return existingEmail
 }
 export const getUsers = async () => {
@@ -18,8 +17,16 @@ export const getDeposits = async () => {
     const apiCall = await axios.get("/api/deposits")
     return apiCall
 }
-export const getInvidualDeposits = async () => {
-    const apiCall = await axios.get("/api/individualDeposits")
+export const getInvidualDeposits = async (id:any) => {
+    const apiCall = await axios.get(`/api/deposits/${id}`)
+    return apiCall
+}
+export const getPaymentDetails = async () => {
+    const apiCall = await axios.get(`/api/payment`)
+    return apiCall
+}
+export const getWithdrawalDetails = async () => {
+    const apiCall = await axios.get(`/api/withdrawal`)
     return apiCall
 }
 

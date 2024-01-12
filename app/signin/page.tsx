@@ -135,7 +135,7 @@ const page = () => {
                             <p className="opacity-50">Keep me logged in.</p>
                         </div>
                         <div className="flex gap-5 items-center">
-                            <button type="submit" className={` px-3 py-1 rounded-md  text-white  bg-amber-400`} disabled={isLoading}>{isLoading ? (<><Loader className='animate-spin'/> Login</>  ) : "Login"}</button>
+                            <button type="submit" className={` px-3 py-1 rounded-md flex text-white  bg-amber-400`} disabled={isLoading}>{isLoading ? (<><Loader className='animate-spin'/> Login</>  ) : "Login"}</button>
                             <p>or</p>
                             <Link href="/signup" className="font-bold">Create Account</Link>
                         </div>

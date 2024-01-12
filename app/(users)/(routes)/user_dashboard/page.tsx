@@ -1,20 +1,56 @@
 "use client"
-import { getInvidualDeposits } from '@/lib/getDetails'
-import { Book, ChevronRight,  PiggyBank, X } from 'lucide-react'
+import { getInvidualDeposits, getPaymentDetails, getWithdrawalDetails } from '@/lib/getDetails'
+import axios from 'axios'
+import { Book, ChevronRight,  Loader,  PiggyBank, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import React from 'react'
-
+import toast from "react-hot-toast"
 const Page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
   const [individualDeposit, setIndividualDeposit] = React.useState(0)
   const [individualPendingDeposit, setIndividualPendingDeposit] = React.useState(0)
   const [individualApprovedDeposit, setIndividualApprovedDeposit] = React.useState(0)
+  const [allIndividualWithdrawal, setAllIndividualWithdrawal] = React.useState<any[]>([])
+  const [paymentDetails, setPaymentDetails] = React.useState<any[]>([])
+  const [isLoading, setIsLoading] = React.useState(false)
   const {data:session} = useSession()
-  console.log("id", session?.user.id)
+  const userId = session?.user.id
+  
+  const onSubmit = async (e:any) => {
+    e.preventDefault()
+    const form = new FormData(e.currentTarget)
+
+    try{
+      const data = {
+        type: form.get("type"),
+        account: form.get("account"),
+        userId: userId
+      }
+      setIsLoading(true)
+      
+      await axios.post(`/api/payment`, data)
+      .then((response:any)=>{
+        if(response.status === 200){
+          setToggleForm(!toggleForm)
+          toast.success("Payment Method Updated")
+          location.reload()
+        }
+      })
+      .catch((error:any)=> {
+        toast.error("An error occured")
+      })
+      .finally(()=>{
+        setIsLoading(false)
+      })
+
+    }catch(error){
+      console.log("error", error)
+    }
+  }
 
   React.useEffect(() => {
     const data = async () => {
-      const individualDepositCall = await getInvidualDeposits()
+      const individualDepositCall = await getInvidualDeposits(userId)
       
       
       if (individualDepositCall.data.length >= 2){
@@ -54,7 +90,14 @@ const Page = () => {
         setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
       }
       
+      
+      const details = await getPaymentDetails()
+      setPaymentDetails(details.data)
 
+      
+      const withdrawalApi = await getWithdrawalDetails()
+      setAllIndividualWithdrawal(withdrawalApi.data)
+      
     } 
     data()
   }, [])
@@ -79,7 +122,7 @@ const Page = () => {
             <div className='bg-sky-400 flex px-10 md:w-[350px] w-full py-20 rounded-md'>
               <PiggyBank size={50}/>
               <div>
-                <span className="text-3xl">0</span>
+                <span className="text-3xl">{allIndividualWithdrawal.length}</span>
                 <p>Withdrawals</p>
               </div>
             </div>
@@ -107,7 +150,16 @@ const Page = () => {
           <div className='border-b-2 space-y-2 pt-4 rounded-md  bg-gradient-to-tl from-violet-800 to-black text-white basis-1/2 px-3 py-5'>
               <h3 className="text-lg font-bold">Setup your payment</h3>
               <p className="text-xs">Please add a mode of payment</p>
-              <button onClick={()=>setToggleForm(!toggleForm)} type="button" className="px-5 py-1 hover:bg-slate-400 border hov  text-white shadow-2xl  ">Setup</button>
+              <button onClick={()=>setToggleForm(!toggleForm)} type="button" className="px-5 py-1 hover:bg-slate-400 border hov  text-white shadow-2xl  ">{paymentDetails.length > 0 ? "Update" : "Setup"}</button>
+              {paymentDetails.map((detail, index) => (
+                <div key={index} className='flex flex-col'>
+                  <span>Type: <span className='text-amber-500'>{detail.type} </span></span>
+                  <span>Account: <span className='text-amber-500'>{detail['account']} </span></span>
+                </div>
+
+              )) 
+
+              }
           </div>
           <div className="flex flex-row gap-2 justify-center items-center">
             <div className=" border-r-2 pr-2 py-3">
@@ -128,38 +180,23 @@ const Page = () => {
           <div className="p-3 cursor-pointer" onClick={()=>setToggleForm(!toggleForm)}>
           <X size={30} className="ml-auto " />
           </div>
-          <form className="py-7 px-10 space-y-7">
-              <div className="flex-col flex ">
-                <label htmlFor="" className="text-lg font-bold">First name</label>
-                <input type="text" placeholder="Your first name" className="w-full border-slate-400 border-2 rounded-md p-2"/>
-              </div>
-              <div className="flex gap-3 flex-wrap md:flex-nowrap w-full">
-                <div className="flex-col  flex w-full ">
-                  <label htmlFor=""  className="text-lg font-bold">Last name</label>
-                  <input type="text" placeholder="Your last name" className="w-full border-slate-400 border-2 rounded-md p-2"/>
-                </div>
-                <div className="flex-col flex w-full">
-                  <label htmlFor=""  className="text-lg font-bold">Email</label>
-                  <input type="email" placeholder="Your email" className="w-full border-slate-400 border-2 rounded-md p-2"/>
-                </div>
-              </div>
+          <form className="py-7 px-10 space-y-7" onSubmit={onSubmit}>
               <div  className="flex gap-3 flex-wrap md:flex-nowrap w-full">
                 <div className="flex-col flex w-full ">
-                  <label htmlFor=""  className="text-lg font-bold">Mode of Payment</label>
-                  <select className="w-full border-slate-400 border-2 rounded-md p-2">
+                  <label htmlFor="type"  className="text-lg font-bold">Mode of Payment</label>
+                  <select className="w-full border-slate-400 border-2 rounded-md p-2" name="type">
                       <option>Bitcoin</option>
                       <option>USDT</option>
-                      <option>Bank Transfer</option>
                   </select>
               </div>
                 <div className="flex-col flex w-full ">
-                  <label htmlFor=""  className="text-lg font-bold">Account</label>
+                  <label htmlFor="account"  className="text-lg font-bold">Account</label>
                   <div className="flex">
-                    <input type="text" placeholder="Your account number" className="w-full border-slate-400 border-2 rounded-tl-md rounded-bl-md p-2"/>
+                    <input type="text" name="account" placeholder="Your account number" className="w-full border-slate-400 border-2 rounded-tl-md rounded-bl-md p-2" required/>
                   </div>
                 </div>
               </div>
-              <button type="submit" className="px-5 py-1 rounded-md  text-white  bg-amber-400">Save</button>
+              <button type="submit" className="px-5 py-1 rounded-md  text-white  bg-amber-400" disabled={isLoading}>{isLoading ? (<><span className='flex'><Loader className='animate-spin' />Updating...</span></> ) : "Update"}</button>
           </form>
 
         </div>

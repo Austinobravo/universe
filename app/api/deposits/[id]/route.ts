@@ -2,7 +2,7 @@ import dbConfig from "@/lib/dbConfig"
 import { getCurrentUser } from "@/lib/session"
 import { NextResponse } from "next/server"
 
-export const GET = async ({params}: {params:{id: any}}) => {
+export const GET = async () => {
     const user = await getCurrentUser()
   
     try{

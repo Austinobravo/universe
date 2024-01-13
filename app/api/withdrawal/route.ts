@@ -38,7 +38,7 @@ export async function POST(req:Request){
                 totalDeposits: existingDepositAmount,
                 totalWithdrawals: existingWithdrawalAmount,
                 totalBalance:newBalance,
-                approved:false
+                
             }
         })
 

@@ -51,8 +51,6 @@ const page = () => {
                     return router.push("/user_dashboard");
                 }
     
-                console.log("log")
-                
             }catch(error){
                 console.error(error)
             }finally{

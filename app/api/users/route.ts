@@ -8,7 +8,7 @@ export async function GET(){
                 firstName: "asc"
             }
         })
-        console.log(users)
+
         return NextResponse.json(users, {status:200})
     }catch(error){
         return  NextResponse.error()

@@ -14,8 +14,6 @@ const page = () => {
 
   const onSubmit = async (e:any) => {
     e.preventDefault()
-    console.log("form", formData)
-
     try{
       setIsLoading(true)
       await axios.patch("/api/balance", formData)
@@ -42,12 +40,10 @@ const page = () => {
       const data = async () => {
         const withdrawalApi = await getAllWithdrawalDetails()
           setAllIndividualWithdrawal(withdrawalApi.data)
-          console.log("with-data", withdrawalApi.data)
           
     
           // Get the total Balance
           const balance =  await getBalanceDetails()
-          console.log("bal", balance)
           setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
           
   
@@ -55,7 +51,7 @@ const page = () => {
       data()
       
     }
-  })
+  },[])
   return (
     <section>
       <div className='py-2 '>

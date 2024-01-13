@@ -41,7 +41,7 @@ export const GET = async () => {
             }
         })
         const {id, userId:any, ...AccountAndType} = paymentAdded
-        console.log("log", AccountAndType)
+
         return NextResponse.json(AccountAndType)
     }catch(error){
         console.log("error", error)

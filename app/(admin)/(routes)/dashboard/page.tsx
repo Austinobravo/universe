@@ -2,7 +2,7 @@
 import {getAllWithdrawalDetails, getDeposits, getUsers} from '@/lib/getDetails'
 import { Book, ChevronRight,  Users } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import Link from 'next/link'
+
 import React from 'react'
 
 const page = () => {

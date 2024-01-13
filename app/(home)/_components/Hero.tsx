@@ -16,7 +16,7 @@ const Hero = () => {
             }
             fetchData()
         }
-    })
+    }, [])
 
     return (
         <>

@@ -18,7 +18,7 @@ const page = () => {
           return each.role === "Admin"
         })
         setAllAdmin(admin)
-        console.log(allUsers)
+       
       } 
       data()
       

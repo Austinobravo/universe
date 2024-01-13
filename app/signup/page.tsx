@@ -56,7 +56,7 @@ const page = () => {
             password: user.password,
             confirm_password: user.confirm_password
         }
-        console.log("data",data)
+
         if(isDeclared){
             try{
                 setIsLoading(true)

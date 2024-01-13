@@ -37,9 +37,7 @@ const page = () => {
     }
 
     try{
-      console.log("in", data)
       setIsLoading(true)
-      console.log("form",data)
       await axios.post(`/api/deposits/${userId}`, data)
       .then((response)=> {
         if(response.status === 200) toast.success("Created Successfully"); setTogglePaymentForm(!togglePaymentForm)
@@ -72,7 +70,7 @@ const page = () => {
       data()
       
     }
-  })
+  },[])
   return (
     <section>
       <div className='py-2 '>

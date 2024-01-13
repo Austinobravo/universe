@@ -36,7 +36,6 @@ const page = () => {
 
     try{
       setIsLoading(true)
-      console.log("form", formData)
       axios.post("/api/investment", formData)
       .then((response:any)=> {
         if(response.status=== 200){
@@ -61,11 +60,10 @@ const page = () => {
       const data = async () => {
         const investment = await getInvestments()
         setAllInvestment(investment.data)
-        console.log("all",allInvestment)
       }
       data()
     }
-  })
+  },[])
   return (
     <section>
       <div className='py-2 '>

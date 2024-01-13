@@ -9,11 +9,13 @@ interface Props{
 
 const DarkModeButton = ({size}: Props) =>{
     const [colorMode, setColorMode] = useColorMode()
-    const [mounted, setMouted] = useState(false)
+    const [mounted, setMounted] = useState(false)
 
     useEffect(()=>{
-        setMouted(true)
-    })
+        if(typeof window !== "undefined"){
+            setMounted(true)
+        }
+    }, [])
     if(!mounted){
         return null
     }

@@ -92,38 +92,44 @@ const page = () => {
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
-            <div className="flex justify-between items-center">
-            <div></div>
-            <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
+          {allInvestment.length > 0 && 
+            <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
+              {/* <div className="flex justify-between items-center">
+              <div></div>
+              <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
 
-            </div>
-            <table className='w-full'>
-              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
-                <th className=''>Deposit type</th>
-                <th className=''>Minimum</th>
-                <th className=''>Maximum</th>
-                <th className=''>Profit</th>
-                <th className=''>Period</th>
-                <th className=''>Time/Date</th>
-              </tr>
- 
-              {allInvestment.map((deposit, index) => (
-                 
-                  <tr key={index} className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between '>
-                    <td className=''>{deposit.name}</td>
-                    <td className=''>${deposit.min}</td>
-                    <td className=''>{deposit.max}</td>
-                    <td className=''>{deposit.profit}%</td>
-                    <td className=''>{deposit.period}</td>
-                    <td className=''>{deposit.createdAt}</td>
+              </div> */}
+              <table className='w-full'>
+                <thead>
+                  <tr >
+                    <th >Deposit type</th>
+                    <th >Minimum</th>
+                    <th >Maximum</th>
+                    <th >Profit</th>
+                    <th >Period</th>
+                    <th >Time/Date</th>
                   </tr>
-               
 
-               ))} 
+                </thead>
+                <tbody>
+                {allInvestment.map((deposit, index) => (
+                    <tr key={index} >
+                      <td >{deposit.name}</td>
+                      <td >${deposit.min}</td>
+                      <td >{deposit.max}</td>
+                      <td >{deposit.profit}%</td>
+                      <td >{deposit.period}</td>
+                      <td >{new Date(deposit.createdAt).toLocaleString()}</td>
+                    </tr>
+                
 
-            </table>
-          </div>
+                ))} 
+
+                </tbody>
+
+              </table>
+            </div>
+          }
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed " >
         <div className="bg-white shadow md:-mb-56 rounded-md md:w-[600px] w-full md:-mt-[400px]">

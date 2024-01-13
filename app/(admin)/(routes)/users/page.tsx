@@ -26,7 +26,6 @@ const page = () => {
       <div className='py-2 '>
         <div className="flex pb-2 justify-between items-center">
           <h1 className='text-3xl font-bold opacity-80'>Users</h1>
-          <button className="opacity-80 rounded-md border py-2 px-4" onClick={()=>setToggleForm(!toggleForm)}>Create plan</button>
 
         </div>
         <hr className='w-full text-base'/>
@@ -49,33 +48,36 @@ const page = () => {
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
-            <div className="flex justify-between items-center">
-            <div></div>
-            <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
-
-            </div>
-            <table className='w-full'>
-              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
-                <th className=''>First Name</th>
-                <th className=''>Last Name</th>
-                <th className=''>Email</th>
-                <th className=''>Role</th>
-              </tr>
-              {allUsers.map((user, index) => (
-                
-                  <tr key={index} className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between '>
-                    <td className=''>{user.firstName}</td>
-                    <td className=''>{user.lastName}</td>
-                    <td className=''>{user.email}</td>
-                    <td className=''>{user.role}</td>
+          {allUsers.length > 0 && 
+            <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
+              <table className='w-full'>
+                <thead>
+                  <tr >
+                    <th >First Name</th>
+                    <th >Last Name</th>
+                    <th >Email</th>
+                    <th >Role</th>
                   </tr>
-               
 
-               ))} 
+                </thead>
+                <tbody>
+                  {allUsers.map((user, index) => (
+                    
+                      <tr key={index} >
+                        <td >{user.firstName}</td>
+                        <td >{user.lastName}</td>
+                        <td >{user.email}</td>
+                        <td >{user.role}</td>
+                      </tr>
+                  
 
-            </table>
-          </div>
+                  ))} 
+
+                </tbody>
+
+              </table>
+            </div>
+          }
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
         <div className="bg-white shadow  rounded-md md:w-[600px] w-full md:-mt-[400px]">

@@ -1,5 +1,5 @@
 "use client"
-import { getInvidualDeposits, getPaymentDetails, getWithdrawalDetails } from '@/lib/getDetails'
+import { getBalanceDetails, getInvidualDeposits, getPaymentDetails, getWithdrawalDetails } from '@/lib/getDetails'
 import axios from 'axios'
 import { Book, ChevronRight,  Loader,  PiggyBank, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -10,6 +10,7 @@ const Page = () => {
   const [individualDeposit, setIndividualDeposit] = React.useState(0)
   const [individualPendingDeposit, setIndividualPendingDeposit] = React.useState(0)
   const [individualApprovedDeposit, setIndividualApprovedDeposit] = React.useState(0)
+  const [individualNewBalance, setIndividualNewBalance] = React.useState(0)
   const [allIndividualWithdrawal, setAllIndividualWithdrawal] = React.useState<any[]>([])
   const [paymentDetails, setPaymentDetails] = React.useState<any[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
@@ -95,8 +96,14 @@ const Page = () => {
       setPaymentDetails(details.data)
 
       
-      const withdrawalApi = await getWithdrawalDetails()
+      const withdrawalApi = await getWithdrawalDetails(userId)
       setAllIndividualWithdrawal(withdrawalApi.data)
+
+      // Get the total Balance
+      const balance =  await getBalanceDetails()
+      setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+      
+            
       
     } 
     data()
@@ -110,7 +117,7 @@ const Page = () => {
             <h1 className='text-3xl font-bold opacity-80 '>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1 line-clamp-1 '>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
           </div>
           <div className=' flex items-center'>
-            <h2 className='text-sm  font-bold'>Remaining balance:<small className='text-[12px] text-black/50  pl-1'>$ 250</small></h2>
+            <h2 className='text-sm  font-bold'>Remaining balance:<small className='text-[12px] text-black/50  pl-1'>$ {individualNewBalance.toFixed(2) || 0}</small></h2>
             
           </div>
         </div>

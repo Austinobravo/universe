@@ -7,9 +7,7 @@ export async function GET(){
             orderBy:{
               createdAt: "asc"
             }
-          })
-          
-        
+          })    
         return NextResponse.json(deposits)
     }catch(error){
         return NextResponse.error()

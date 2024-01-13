@@ -3,12 +3,12 @@ import  dbConfig  from '@/lib/dbConfig';
 import { NextResponse } from 'next/server';
 
 export async function GET(){
-    const user = await getCurrentUser()
+    
     try{
         const data = await dbConfig.withdrawals.findMany({
-            where:{
-                userId:user?.id
-        }
+            orderBy:{
+                createdAt: "asc"
+              }
         })
         return NextResponse.json(data)
     }catch(error){
@@ -19,29 +19,32 @@ export async function GET(){
 export async function POST(req:Request){
     const body = await req.json()
 
-    const {userId, amount, existingAmount} = body
-    console.log("body", body)
+    const {userId, amount, existingDepositAmount, existingWithdrawalAmount} = body
 
-    const user = await dbConfig.deposits.findMany({
-        where: {
-            userId:userId,
-            approved: true
-        }
-    }) 
-    console.log("user", user)
-    if (!user) return new NextResponse("This user has no approved funds", {status: 401})
+    const newBalance = existingDepositAmount - amount
+
     
-    // if(user?.amount  existingAmount) return new NextResponse("")
     try{
-
-        const data = await dbConfig.withdrawals.create({
+        await dbConfig.withdrawals.create({
             data:{
                 userId: userId,
                 amount: amount,
                 approved:false
             }
         })
-        return NextResponse.json(data)
+        await dbConfig.balance.create({
+            data:{
+                userId: userId,
+                totalDeposits: existingDepositAmount,
+                totalWithdrawals: existingWithdrawalAmount,
+                totalBalance:newBalance,
+                approved:false
+            }
+        })
+
+
+
+        return NextResponse.json(newBalance)
         
 
     }catch(error){

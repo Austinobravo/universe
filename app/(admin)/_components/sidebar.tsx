@@ -81,7 +81,7 @@ const Sidebar = () => {
                         return (
                             <div key={index}>
                                 <Link href={each.href}>
-                                    <div className={`${pathname === each.href  && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "} ${active === each.name && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "}  flex hover:bg-slate-500 py-2  px-3 justify-between`} onClick={()=>setActive("")}>
+                                    <div className={`${pathname === each.href  && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "} ${active === each.name && "!bg-gradient-to-tl  !from-purple-800 !to-blue-800 p-2 rounded-tr-lg rounded-br-lg  text-white "}  flex hover:bg-slate-500 py-2  px-3 justify-between`} onClick={()=>{setActive(""), each?.children ? "" : setToggle(!toggle)}}>
                                         <div className='flex gap-x-2'>
                                             <Icon/>
                                             <h2 className='flex'>{each.name} </h2>
@@ -92,7 +92,7 @@ const Sidebar = () => {
                                     {itemsToggle && current === index &&
                                     <div className={`flex-col flex pl-8 pt-4 gap-y-3 ${itemsToggle && 'bg-slate-500'}`}>
                                         {each.children?.map((child, index) => (
-                                            <div onClick={()=>{setActive(each.name), setItemsToggle(!itemsToggle)}}   className='hover:text-white'>
+                                            <div onClick={()=>{setActive(each.name), setItemsToggle(!itemsToggle), setToggle(!toggle)}}   className='hover:text-white'>
                                             <Link key={index} href={child.href} className='hover:text-white' >
                                                 {child.type} 
                                             </Link>
@@ -112,10 +112,9 @@ const Sidebar = () => {
         </div>
             : 
                 <div className="pt-10 pl-5 pointer" onClick={()=> setToggle(!toggle)}><Menu size={30}/></div>
-            }
+    }
 
     </section>
-    
     </>
   )
 }

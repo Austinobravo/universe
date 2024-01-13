@@ -1,5 +1,5 @@
 "use client"
-import {getDeposits, getUsers} from '@/lib/getDetails'
+import {getAllWithdrawalDetails, getDeposits, getUsers} from '@/lib/getDetails'
 import { Book, ChevronRight,  Users } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -11,6 +11,7 @@ const page = () => {
   const [allDeposits, setAllDeposits] = React.useState(0)
   const [allPendingDeposits, setAllPendingDeposits] = React.useState(0)
   const [allApprovedDeposits, setAllApprovedDeposits] = React.useState(0)
+  const [allPendingWithdrawal, setAllPendingWithdrawal] = React.useState(0)
   const {data:session} = useSession()
   console.log("id", session?.user.id)
   React.useEffect(() => {
@@ -24,12 +25,10 @@ const page = () => {
       const deposits = await getDeposits()
       if (deposits.data.length >= 2){
         const totalDeposits = deposits.data.reduce((total:any, each:any) =>
-        (total + each.amount,0)
+        total + each.amount,0
         )
         setAllDeposits(totalDeposits)
-        console.log("all", totalDeposits)
-        console.log("alldep", deposits.data)
-        
+
       }else{
         setAllDeposits(deposits.data[0].amount || 0)
         
@@ -40,7 +39,7 @@ const page = () => {
       )
       if(pendingDeposits.length >=2 ){
         const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
-         (total.amount + each.amount,0)
+         (total + each.amount,0)
         )
         setAllPendingDeposits(pendingDepositsAmount)
         
@@ -55,11 +54,25 @@ const page = () => {
       
       if(approvedDeposits.length >=2){
         const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
-         total.amount + each.amount
+         total + each.amount,0
         )
         setAllApprovedDeposits(approvedDepositsAmount)
       }else{
         setAllApprovedDeposits(approvedDeposits[0]?.amount || 0)
+      }
+      
+      const Withdrawal = await getAllWithdrawalDetails()
+      const pendingWithdrawal = Withdrawal.data.filter((each:any) => 
+      each.approved === false
+      )
+      
+      if(pendingWithdrawal.length >=2){
+        const approvedDepositsAmount = pendingWithdrawal?.reduce((total:any, each:any) =>
+         total + each.amount,0
+        )
+        setAllPendingWithdrawal(approvedDepositsAmount)
+      }else{
+        setAllPendingWithdrawal(pendingWithdrawal[0]?.amount || 0)
       }
       
 
@@ -69,13 +82,13 @@ const page = () => {
   return (
     <section>
       <div className='py-2'>
-        <h1 className='text-3xl font-bold opacity-80'>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1'>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
+        <h1 className='text-3xl font-bold opacity-80'>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs line-clamp-1 text-black/50 pl-1'>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
         <hr className='w-full text-base'/>
       </div>
       <div className='flex gap-7 flex-wrap md:flex-nowrap mb-12'>
         <div className='md:basis-2/3'>
           <div className="flex flex-wrap md:flex-nowrap  text-white gap-4 mb-10">
-            <Link href="/users">
+            
             <div className='bg-sky-400 flex px-10 md:w-[350px] w-full py-20 rounded-md'>
               <Users size={50}/>
               <div>
@@ -83,11 +96,11 @@ const page = () => {
                 <p>{allUsers.length > 1 ? "Registered Users" : "Registered User"}</p>
               </div>
             </div>
-            </Link>
+           
             <div className="bg-pink-400  flex px-10 md:w-[350px] w-full py-20 rounded-md ">
               <Book size={50}/>
               <div>
-                <span className="text-xl">USD 0.00 </span>
+                <span className="text-xl">USD {allPendingWithdrawal.toFixed(2)} </span>
                 <p>Pending Withdrawals</p>
               </div>
             </div>
@@ -112,11 +125,11 @@ const page = () => {
           <div className="flex flex-row gap-2 justify-center items-center">
             <div className=" border-r-2 pr-2">
               <span className="font-bold">USD {(allPendingDeposits).toFixed(2)}</span>
-              <p className="text-xs">Pending</p>
+              <p className="text-xs">Pending deposits</p>
             </div>
             <div>
               <span className="font-bold">USD {(allApprovedDeposits).toFixed(2)}</span>
-              <p className="text-xs">Approved</p>
+              <p className="text-xs">Approved deposits</p>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 "use client"
-import { getInvidualDeposits, getPaymentDetails, getWithdrawalDetails } from '@/lib/getDetails'
+import { getBalanceDetails, getInvidualDeposits, getPaymentDetails, getWithdrawalDetails } from '@/lib/getDetails'
 import axios from 'axios'
 import { Banknote, ChevronRight, Landmark, Loader, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
@@ -22,6 +22,7 @@ const page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
   const [individualApprovedDeposit, setIndividualApprovedDeposit] = React.useState(0)
   const [allIndividualWithdrawal, setAllIndividualWithdrawal] = React.useState<any[]>([])
+  const [allIndividualWithdrawalAmount, setAllIndividualWithdrawalAmount] = React.useState(0)
   const [individualNewBalance, setIndividualNewBalance] = React.useState(0)
   const [isLoading, setIsLoading] = React.useState(false)
   const [paymentDetails, setPaymentDetails] = React.useState("")
@@ -45,12 +46,12 @@ const page = () => {
       const data = {
         amount: +form.get("amount")! ,
         userId: userId,
-        existingAmount: individualApprovedDeposit
+        existingDepositAmount: individualApprovedDeposit,
+        existingWithdrawalAmount: allIndividualWithdrawalAmount
       }
 
-      const verify = await verifyBalance(Number(data.amount))
-      console.log(verify)
-      console.log(data.existingAmount)
+      const verify = await verifyBalance(data.amount)
+
       if(!verify) return toast.error("Insufficient funds")
       setIsLoading(true)
       
@@ -59,16 +60,8 @@ const page = () => {
         if(response.status === 200){
           setToggleForm(!toggleForm)
           toast.success(`Your ${data.amount} withdrawal have been updated.`)
-          if (individualNewBalance !== 0){
-            const newValue = individualNewBalance - data.amount
-            setIndividualNewBalance(newValue)
-            
-          }else{
-            const newValue = individualApprovedDeposit - data.amount
-            setIndividualNewBalance(newValue)
 
-          }
-          location.reload()
+         
         }
       })
       .catch((error)=> {
@@ -88,27 +81,43 @@ const page = () => {
       const individualDepositCall = await getInvidualDeposits(userId)
       
 
-      
+      // Get the approved deposits
       const approvedDeposits = individualDepositCall.data.filter((each:any) => 
       each.approved === true
       )
       if(approvedDeposits.length >=2){
         const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
-         total?.amount + each?.amount
+         total + each?.amount
         )
         setIndividualApprovedDeposit(approvedDepositsAmount)
       }else{
         setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
       }
-      console.log('ad',individualNewBalance)
-      
-      
+
+      // Get the individual Payment details
       const details = await getPaymentDetails()
       setPaymentDetails(details.data[0]?.type)
       
-      
-      const withdrawalApi = await getWithdrawalDetails()
+      // Get the total Individual withdrawal
+      const withdrawalApi = await getWithdrawalDetails(userId)
       setAllIndividualWithdrawal(withdrawalApi.data)
+      
+      if(withdrawalApi.data.length >=2){
+        const withdrawalAmount = withdrawalApi.data?.reduce((total:any, each:any) =>
+         total + each?.amount,0, 
+        )
+        
+        setAllIndividualWithdrawalAmount(withdrawalAmount)
+      }else{
+        
+        setAllIndividualWithdrawalAmount(withdrawalApi.data[0]?.amount || 0)
+      }
+
+      // Get the total Balance
+      const balance =  await getBalanceDetails()
+      setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+      
+      
       
     } 
     data()
@@ -141,31 +150,35 @@ const page = () => {
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
-            <div className="flex justify-between items-center">
-          
-            <table className='w-full'>
-              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
-
-                <th className=''>Amount</th>
-                <th className=''>Time/Date</th>
-                <th className=''>Approved</th>
-              </tr>
-              {allIndividualWithdrawal.map((deposit, index) => (
-                 <div key={index}>
-                  <tr className='flex flex-wrap border-2 px-2 py-2 md:flex-nowrap justify-between '>
-
-                    <td className=''>${deposit.amount}</td>
-                    <td className=''>{deposit.createdAt}</td>
-                    <td className={`${deposit.approved && "bg-green-400"} bg-amber-400 py-1 px-4 text-xs text-white rounded-sm `}>{deposit.approved ? "Approved" : "Pending"}</td>
+          {allIndividualWithdrawal.length > 0 && 
+            <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
+              <div className="flex justify-between items-center">
+            
+              <table >
+              <thead>
+                  <tr >
+                  <th >Amount</th>
+                  <th >Time/Date</th>
+                  <th >Approved</th>
                   </tr>
-               </div>  
+              </thead>
+              <tbody>
+                {allIndividualWithdrawal.map((deposit, index) => (
+                  
+                    <tr key={index}>
 
-                ))}  
+                      <td >${deposit.amount.toFixed(2)}</td>
+                      <td >{new Date(deposit.createdAt).toLocaleString()}</td>
+                      <td className={`${deposit.approved && "bg-green-400"} bg-amber-400 py-1 px-4 text-xs text-white rounded-sm `}>{deposit.approved ? "Approved" : "Pending"}</td>
+                    </tr>
+                  ))}  
 
-          </table>
+              </tbody>
+
+              </table>
+              </div>
             </div>
-      </div>
+          }
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
         <div className="bg-white shadow md:-mb-56 rounded-md md:w-[600px] w-full md:-mt-[400px]">
@@ -184,7 +197,7 @@ const page = () => {
                 </div>
                 <div className="flex-col flex w-full">
                   <label htmlFor=""  className="text-lg font-bold">From</label>
-                  <p className="w-full border-slate-400 border-2 rounded-md bg-slate-400 p-2" >{individualNewBalance !== 0 ? individualNewBalance : individualApprovedDeposit ? individualApprovedDeposit.toFixed(2) : (<span className='flex w-fit'>You have no approved funds <Link href="/user_deposits" className='bg-amber-400 py-2 px-3 text-xs rounded-md text-white'>Make a deposit</Link> </span>)}</p>
+                  <p className="w-full border-slate-400 border-2 rounded-md bg-slate-400 p-2" >{individualNewBalance !== 0 ? (individualNewBalance).toFixed(2) : individualApprovedDeposit ? individualApprovedDeposit.toFixed(2) : (<span className='flex w-fit'>You have no approved funds <Link href="/user_deposits" className='bg-amber-400 py-2 px-3 text-xs rounded-md text-white'>Make a deposit</Link> </span>)}</p>
                 </div>
               </div>
               <div  className="flex gap-3 flex-wrap md:flex-nowrap w-full">

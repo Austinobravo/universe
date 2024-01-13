@@ -74,52 +74,54 @@ const page = () => {
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
-            <div className='flex justify-between'>
-
-              <div></div>
-              <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
-            </div>
-            <div className="flex justify-between items-center">
-              
-            <table className='w-full'>
-              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
-                <th className=''>Deposit type</th>
-                <th className=''>Amount</th>
-                <th className=''>Time/Date</th>
-                <th className=''>Approved</th>
-              </tr>
-              {allDeposits.map((deposit, index) => (
-                 <div key={index}>
-                  <tr className='flex flex-wrap border-2 px-2 py-2 md:flex-nowrap justify-between '>
-                    <td className=''>{deposit.name}</td>
-                    <td className=''>${deposit.amount}</td>
-                    <td className=''>{deposit.createdAt}</td>
-                    <td className={`cursor-pointer `}>
-                      {deposit.approved ? 
-                        <span className='mr-1 bg-green-400 py-1 px-4 text-xs text-white rounded-sm'>
-                        Approved
-                      </span>
-                      : (
-                        <>
-                        <span className='mr-1 bg-pink-400 py-1 px-4 text-xs text-white rounded-sm' onClick={()=>{setToggleForm(!toggleForm), setFormData({...deposit})}}>
-                          Approve
-                        </span>
-                        <span className=' bg-amber-400 py-1 px-4 text-xs text-white rounded-sm'>
-                          Pending
-                        </span>
-                        </>
-
-                      )}
-                      </td>
+          {allDeposits.length > 0 && 
+            <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
+              <div className="flex justify-between items-center">
+                
+              <table className='w-full'>
+                <thead>
+                  <tr >
+                    <th >Deposit type</th>
+                    <th >Amount</th>
+                    <th >Time/Date</th>
+                    <th >Approved</th>
                   </tr>
-               </div>  
 
-                ))}  
+                </thead>
+                {allDeposits.map((deposit, index) => (
+                  <tbody>
+                      <tr key={index} className=' '>
+                        <td className=''>{deposit.name}</td>
+                        <td className=''>${deposit.amount}</td>
+                        <td className=''>{new Date(deposit.createdAt).toLocaleString()}</td>
+                        <td className={`cursor-pointer `}>
+                          {deposit.approved ? 
+                            <span className='mr-1 bg-green-400 py-1 px-4 text-xs text-white rounded-sm'>
+                            Approved
+                          </span>
+                          : (
+                            <>
+                            <div className='flex flex-wrap md:flex-nowrap gap-1 justify-center'>
+                                <span className='mr-1 bg-pink-400 py-1 px-4 text-xs text-white rounded-sm'>
+                                Approve
+                                </span>
+                                <span className=' bg-amber-400 py-1 px-4 text-xs text-white rounded-sm'>
+                                Pending
+                                </span>
 
-          </table>
+                            </div>
+                            </>
+
+                          )}
+                          </td>
+                      </tr>
+                  </tbody>
+                  ))}  
+
+            </table>
+              </div>
             </div>
-      </div>
+          }
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
         <div className="bg-white shadow  md:-mb-56 rounded-md md:w-[600px] w-full md:-mt-[400px]">

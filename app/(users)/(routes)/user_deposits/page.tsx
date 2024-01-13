@@ -98,75 +98,58 @@ const page = () => {
             </div>
 
           </div>
-          <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
-            <div className="flex justify-between items-center">
-            <h3>Select your preferred investment plan</h3>
-            <span className="flex justify-between items-center">View all <ChevronRight size={15}/></span>
+          {allInvestment.length > 0 && 
+            <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
+              <div className="flex justify-between items-center">
+              <h3>Select your preferred investment plan</h3>
+              <span className="flex justify-between items-center">View all <ChevronRight size={15}/></span>
 
-            </div>
-            <div className="flex gap-5 flex-wrap md:flex-nowrap">
-              {allInvestment.map((investment, index) => (
-                <div key={index} className="bg-green-200 rounded-md px-2 space-y-2 py-5 w-full">
-                  <h2 className="text-xl font-bold">{investment.name}</h2>
-                  <p>$ {investment.min} <span className="text-xs">min</span></p>
-                  <p>$ {investment.max} <span className="text-xs">max</span></p>
-                  <p>{investment.period}</p>
-                  <div>
-                  <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" onClick={()=>{setFormData({...investment}), setToggleForm(!toggleForm), setPrevMin(investment.min)}} >Invest</button>
+              </div>
+              <div className="flex gap-5 flex-wrap md:flex-nowrap">
+                {allInvestment.map((investment, index) => (
+                  <div key={index} className="bg-green-200 rounded-md px-2 space-y-2 py-5 w-full">
+                    <h2 className="text-xl font-bold">{investment.name}</h2>
+                    <p>$ {investment.min} <span className="text-xs">min</span></p>
+                    <p>$ {investment.max} <span className="text-xs">max</span></p>
+                    <p>{investment.period}</p>
+                    <div>
+                    <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" onClick={()=>{setFormData({...investment}), setToggleForm(!toggleForm), setPrevMin(investment.min)}} >Invest</button>
+                    </div>
                   </div>
-                </div>
 
-              ))}
-              
+                ))}
+                
+              </div>
             </div>
-        </div>
-        <div className='pb-5'>
-        <table className='w-full'>
-              <tr className='flex flex-wrap border-2 px-2 md:flex-nowrap justify-between text-center'>
-                <th className=''>Deposit type</th>
-                <th className=''>Amount</th>
-                <th className=''>Time/Date</th>
-                <th className=''>Approved</th>
-              </tr>
-              {allDeposit.map((deposit, index) => (
-                 <div >
-                  <tr className='flex flex-wrap border-2 px-2 py-2 md:flex-nowrap justify-between '>
-                    <td className=''>{deposit.name}</td>
-                    <td className=''>${deposit.amount}</td>
-                    <td className=''>{deposit.createdAt}</td>
-                    <td className={`${deposit.approved && "bg-green-400"} bg-amber-400 py-1 px-4 text-xs text-white rounded-sm `}>{deposit.approved ? "Approved" : "Pending"}</td>
-                  </tr>
-               </div>  
+          }
+        {allDeposit.length > 0 && 
+          <div className='pb-5'>
+          <table className='w-full'>
+            <thead>
+                <tr >
+                  <th >Deposit type</th>
+                  <th >Amount</th>
+                  <th >Time/Date</th>
+                  <th >Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {allDeposit.map((deposit, index) => (
+                  
+                    <tr key={index}>
+                      <td >{deposit.name}</td>
+                      <td >${deposit.amount}</td>
+                      <td >{new Date(deposit.createdAt).toLocaleString()}</td>
+                      <td className={`${deposit.approved && "bg-green-400"} bg-amber-400 py-1 px-4 text-xs text-white rounded-sm `}>{deposit.approved ? "Approved" : "Pending"}</td>
+                    </tr>
+                  ))}  
 
-                ))}  
+            </tbody>
 
-          </table>
-        </div>
-        {/* <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
-          <Image src="/home/bitcoin.jpg" width={20} height={20} alt="bitcoin"/>
-          <form>
-            <div>
-              <label htmlFor="">Enter amount</label>
-              <input type="number" placeholder="Amount"/>
-            </div>
-            <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" >Invest</button>
-            
-          </form>
-
-        </div> */}
-        {/* <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
-          <h2>BTC Bitcoin Account</h2>
-          <p>Please make payment to this wallet address <span className="text-green">1r4h4rj4rnuy4ru4;oir</span></p>
-          <form>
-            <div>
-              <label htmlFor="">Enter file</label>
-              <input type="file" placeholder="Amount"/>
-            </div>
-            <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" >Invest</button>
-            
-          </form>
-
-        </div> */}
+            </table>
+          </div>
+        }
+        
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
         <div className="bg-white shadow  md:-mb-56  rounded-md md:w-[600px] w-full md:-mt-[400px]">

@@ -27,6 +27,7 @@ model User{
   deposit Deposits[]
   withdrawals Withdrawals[]
   payment Payment[]
+  balance Balance[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
@@ -65,8 +66,9 @@ model Withdrawals{
   id Int @id @default(autoincrement())
   userId Int
   amount Int
-  approved Boolean @default(false)
   user User @relation(fields: [userId], references: [id])
+  balance Balance[]
+  approved Boolean @default(false)
   
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
@@ -81,5 +83,28 @@ model Payment{
   account String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
   @@index([userId])
+}
+
+model Balance{
+  id Int @id @default(autoincrement())
+  userId Int 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalDeposits Int
+  totalWithdrawals Int
+  totalBalance Int
+  
+
+  withdrawalId Int @default(1)
+  withdrawal Withdrawals @relation(fields: [withdrawalId], references: [id], onDelete: Cascade)
+  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+  @@index([userId])
+  @@index([withdrawalId])
+
 }

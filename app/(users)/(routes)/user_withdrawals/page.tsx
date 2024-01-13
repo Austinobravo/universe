@@ -77,50 +77,53 @@ const page = () => {
   }
 
   React.useEffect(() => {
-    const data = async () => {
-      const individualDepositCall = await getInvidualDeposits(userId)
-      
-
-      // Get the approved deposits
-      const approvedDeposits = individualDepositCall.data.filter((each:any) => 
-      each.approved === true
-      )
-      if(approvedDeposits.length >=2){
-        const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
-         total + each?.amount
-        )
-        setIndividualApprovedDeposit(approvedDepositsAmount)
-      }else{
-        setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
-      }
-
-      // Get the individual Payment details
-      const details = await getPaymentDetails()
-      setPaymentDetails(details.data[0]?.type)
-      
-      // Get the total Individual withdrawal
-      const withdrawalApi = await getWithdrawalDetails(userId)
-      setAllIndividualWithdrawal(withdrawalApi.data)
-      
-      if(withdrawalApi.data.length >=2){
-        const withdrawalAmount = withdrawalApi.data?.reduce((total:any, each:any) =>
-         total + each?.amount,0, 
-        )
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const individualDepositCall = await getInvidualDeposits(userId)
         
-        setAllIndividualWithdrawalAmount(withdrawalAmount)
-      }else{
+  
+        // Get the approved deposits
+        const approvedDeposits = individualDepositCall.data.filter((each:any) => 
+        each.approved === true
+        )
+        if(approvedDeposits.length >=2){
+          const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
+           total + each?.amount
+          )
+          setIndividualApprovedDeposit(approvedDepositsAmount)
+        }else{
+          setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
+        }
+  
+        // Get the individual Payment details
+        const details = await getPaymentDetails()
+        setPaymentDetails(details.data[0]?.type)
         
-        setAllIndividualWithdrawalAmount(withdrawalApi.data[0]?.amount || 0)
-      }
-
-      // Get the total Balance
-      const balance =  await getBalanceDetails()
-      setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+        // Get the total Individual withdrawal
+        const withdrawalApi = await getWithdrawalDetails(userId)
+        setAllIndividualWithdrawal(withdrawalApi.data)
+        
+        if(withdrawalApi.data.length >=2){
+          const withdrawalAmount = withdrawalApi.data?.reduce((total:any, each:any) =>
+           total + each?.amount,0, 
+          )
+          
+          setAllIndividualWithdrawalAmount(withdrawalAmount)
+        }else{
+          
+          setAllIndividualWithdrawalAmount(withdrawalApi.data[0]?.amount || 0)
+        }
+  
+        // Get the total Balance
+        const balance =  await getBalanceDetails()
+        setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+        
+        
+        
+      } 
+      data()
       
-      
-      
-    } 
-    data()
+    }
   }, [])
   return (
     <section>

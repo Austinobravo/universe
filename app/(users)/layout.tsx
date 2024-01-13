@@ -5,7 +5,6 @@ import { getCurrentUser } from "@/lib/session";
 
 const UserLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getCurrentUser()
-  
   if(!user ) redirect("/signin")
   if (user.role !== "User") redirect("/dashboard")
   

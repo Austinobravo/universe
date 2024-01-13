@@ -44,11 +44,14 @@ const Plans = () => {
   const {data:session} = useSession()
 
     React.useEffect(() => {
-        const data = async () => {
-          const investment = await getInvestments()
-          setAllItems(investment.data)
+        if (typeof window !== "undefined"){
+            const data = async () => {
+              const investment = await getInvestments()
+              setAllItems(investment.data)
+            }
+            data()
+      
         }
-        data()
       })
 
 

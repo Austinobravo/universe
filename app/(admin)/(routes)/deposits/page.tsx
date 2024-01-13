@@ -35,12 +35,15 @@ const page = () => {
   }
   
   React.useEffect(()=> {
-    const data = async () => {
-      const deposits = await getDeposits()
-      setAllDeposits(deposits.data)
-      
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const deposits = await getDeposits()
+        setAllDeposits(deposits.data)
+        
+      }
+      data()
+
     }
-    data()
 
   },[])
 

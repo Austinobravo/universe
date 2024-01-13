@@ -50,63 +50,66 @@ const Page = () => {
   }
 
   React.useEffect(() => {
-    const data = async () => {
-      const individualDepositCall = await getInvidualDeposits(userId)
-      
-      
-      if (individualDepositCall.data.length >= 2){
-        const totalDeposits = individualDepositCall.data.reduce((total:any, each:any) =>
-        (total + each.amount,0)
-        )
-        setIndividualDeposit(totalDeposits)
-      }else{
-        setIndividualDeposit(individualDepositCall.data[0]?.amount || 0)
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const individualDepositCall = await getInvidualDeposits(userId)
         
-      }
-      
-      const pendingDeposits = individualDepositCall.data.filter((each:any) => 
-        each.approved === false
-      )
-
-      if(pendingDeposits.length >=2 ){
-        const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
-        (total.amount + each.amount,0)
-        )
-        setIndividualPendingDeposit(pendingDepositsAmount)
         
-      }else{
-        setIndividualPendingDeposit(pendingDeposits[0]?.amount || 0)
-      }
-      
-      
-      const approvedDeposits = individualDepositCall.data.filter((each:any) => 
-      each.approved === true
-      )
-      if(approvedDeposits.length >=2){
-        const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
-         total?.amount + each?.amount
+        if (individualDepositCall.data.length >= 2){
+          const totalDeposits = individualDepositCall.data.reduce((total:any, each:any) =>
+          (total + each.amount,0)
+          )
+          setIndividualDeposit(totalDeposits)
+        }else{
+          setIndividualDeposit(individualDepositCall.data[0]?.amount || 0)
+          
+        }
+        
+        const pendingDeposits = individualDepositCall.data.filter((each:any) => 
+          each.approved === false
         )
-        setIndividualApprovedDeposit(approvedDepositsAmount)
-      }else{
-        setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
-      }
+  
+        if(pendingDeposits.length >=2 ){
+          const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
+          (total.amount + each.amount,0)
+          )
+          setIndividualPendingDeposit(pendingDepositsAmount)
+          
+        }else{
+          setIndividualPendingDeposit(pendingDeposits[0]?.amount || 0)
+        }
+        
+        
+        const approvedDeposits = individualDepositCall.data.filter((each:any) => 
+        each.approved === true
+        )
+        if(approvedDeposits.length >=2){
+          const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
+           total?.amount + each?.amount
+          )
+          setIndividualApprovedDeposit(approvedDepositsAmount)
+        }else{
+          setIndividualApprovedDeposit(approvedDeposits[0]?.amount || 0)
+        }
+        
+        
+        const details = await getPaymentDetails()
+        setPaymentDetails(details.data)
+  
+        
+        const withdrawalApi = await getWithdrawalDetails(userId)
+        setAllIndividualWithdrawal(withdrawalApi.data)
+  
+        // Get the total Balance
+        const balance =  await getBalanceDetails()
+        setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+        
+              
+        
+      } 
+      data()
       
-      
-      const details = await getPaymentDetails()
-      setPaymentDetails(details.data)
-
-      
-      const withdrawalApi = await getWithdrawalDetails(userId)
-      setAllIndividualWithdrawal(withdrawalApi.data)
-
-      // Get the total Balance
-      const balance =  await getBalanceDetails()
-      setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
-      
-            
-      
-    } 
-    data()
+    }
   }, [])
 
   return (

@@ -36,11 +36,13 @@ const Slider = () => {
     }
     
     React.useEffect(() => {
-        const interval = setInterval(() => (
-            nextFunction()
-        ), 5000
-        )
-        return () => clearInterval(interval)
+        if (typeof window !== "undefined"){
+            const interval = setInterval(() => (
+                nextFunction()
+            ), 5000
+            )
+            return () => clearInterval(interval)
+        }
     }, [current])
 
     return (

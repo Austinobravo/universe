@@ -13,71 +13,73 @@ const page = () => {
   const [allApprovedDeposits, setAllApprovedDeposits] = React.useState(0)
   const [allPendingWithdrawal, setAllPendingWithdrawal] = React.useState(0)
   const {data:session} = useSession()
-  console.log("id", session?.user.id)
+
   React.useEffect(() => {
-    const data = async () => {
-      const users = await getUsers()
-      setAllUsers(users.data)
-      const admin =  users.data.filter((each: { role: string }) => {
-        return each.role === "Admin"
-      })
-      setAllAdmin(admin)
-      const deposits = await getDeposits()
-      if (deposits.data.length >= 2){
-        const totalDeposits = deposits.data.reduce((total:any, each:any) =>
-        total + each.amount,0
-        )
-        setAllDeposits(totalDeposits)
-
-      }else{
-        setAllDeposits(deposits.data[0].amount || 0)
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const users = await getUsers()
+        setAllUsers(users.data)
+        const admin =  users.data.filter((each: { role: string }) => {
+          return each.role === "Admin"
+        })
+        setAllAdmin(admin)
+        const deposits = await getDeposits()
+        if (deposits.data.length >= 2){
+          const totalDeposits = deposits.data.reduce((total:any, each:any) =>
+          total + each.amount,0
+          )
+          setAllDeposits(totalDeposits)
+  
+        }else{
+          setAllDeposits(deposits.data[0].amount || 0)
+          
+        }
         
-      }
-      
-      const pendingDeposits = deposits.data.filter((each:any) => 
+        const pendingDeposits = deposits.data.filter((each:any) => 
+          each.approved === false
+        )
+        if(pendingDeposits.length >=2 ){
+          const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
+           (total + each.amount,0)
+          )
+          setAllPendingDeposits(pendingDepositsAmount)
+          
+        }else{
+          setAllPendingDeposits(pendingDeposits[0].amount || 0)
+        }
+        
+        
+        const approvedDeposits = deposits.data.filter((each:any) => 
+        each.approved === true
+        )
+        
+        if(approvedDeposits.length >=2){
+          const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
+           total + each.amount,0
+          )
+          setAllApprovedDeposits(approvedDepositsAmount)
+        }else{
+          setAllApprovedDeposits(approvedDeposits[0]?.amount || 0)
+        }
+        
+        const Withdrawal = await getAllWithdrawalDetails()
+        const pendingWithdrawal = Withdrawal.data.filter((each:any) => 
         each.approved === false
-      )
-      if(pendingDeposits.length >=2 ){
-        const pendingDepositsAmount = pendingDeposits?.reduce((total:any, each:any) =>
-         (total + each.amount,0)
         )
-        setAllPendingDeposits(pendingDepositsAmount)
         
-      }else{
-        setAllPendingDeposits(pendingDeposits[0].amount || 0)
-      }
-      
-      
-      const approvedDeposits = deposits.data.filter((each:any) => 
-      each.approved === true
-      )
-      
-      if(approvedDeposits.length >=2){
-        const approvedDepositsAmount = approvedDeposits?.reduce((total:any, each:any) =>
-         total + each.amount,0
-        )
-        setAllApprovedDeposits(approvedDepositsAmount)
-      }else{
-        setAllApprovedDeposits(approvedDeposits[0]?.amount || 0)
-      }
-      
-      const Withdrawal = await getAllWithdrawalDetails()
-      const pendingWithdrawal = Withdrawal.data.filter((each:any) => 
-      each.approved === false
-      )
-      
-      if(pendingWithdrawal.length >=2){
-        const approvedDepositsAmount = pendingWithdrawal?.reduce((total:any, each:any) =>
-         total + each.amount,0
-        )
-        setAllPendingWithdrawal(approvedDepositsAmount)
-      }else{
-        setAllPendingWithdrawal(pendingWithdrawal[0]?.amount || 0)
-      }
-      
-
-    } 
-    data()
+        if(pendingWithdrawal.length >=2){
+          const approvedDepositsAmount = pendingWithdrawal?.reduce((total:any, each:any) =>
+           total + each.amount,0
+          )
+          setAllPendingWithdrawal(approvedDepositsAmount)
+        }else{
+          setAllPendingWithdrawal(pendingWithdrawal[0]?.amount || 0)
+        }
+        
+  
+      } 
+      data()
+    }
   }, [])
   return (
     <section>

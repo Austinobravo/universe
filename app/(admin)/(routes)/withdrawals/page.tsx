@@ -38,23 +38,23 @@ const page = () => {
   }
 
   React.useEffect(() => {
-
-
-
-    const data = async () => {
-      const withdrawalApi = await getAllWithdrawalDetails()
-        setAllIndividualWithdrawal(withdrawalApi.data)
-        console.log("with-data", withdrawalApi.data)
-        
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const withdrawalApi = await getAllWithdrawalDetails()
+          setAllIndividualWithdrawal(withdrawalApi.data)
+          console.log("with-data", withdrawalApi.data)
+          
+    
+          // Get the total Balance
+          const balance =  await getBalanceDetails()
+          console.log("bal", balance)
+          setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+          
   
-        // Get the total Balance
-        const balance =  await getBalanceDetails()
-        console.log("bal", balance)
-        setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
-        
-
+      }
+      data()
+      
     }
-    data()
   })
   return (
     <section>

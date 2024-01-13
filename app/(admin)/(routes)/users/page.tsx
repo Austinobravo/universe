@@ -10,16 +10,19 @@ const page = () => {
   const [allAdmin, setAllAdmin] = React.useState<any[]>([])
 
   React.useEffect(() => {
-    const data = async () => {
-      const users = await getUsers()
-      setAllUsers(users.data)
-      const admin =  users.data.filter((each: { role: string }) => {
-        return each.role === "Admin"
-      })
-      setAllAdmin(admin)
-      console.log(allUsers)
-    } 
-    data()
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const users = await getUsers()
+        setAllUsers(users.data)
+        const admin =  users.data.filter((each: { role: string }) => {
+          return each.role === "Admin"
+        })
+        setAllAdmin(admin)
+        console.log(allUsers)
+      } 
+      data()
+      
+    }
   }, [])
   return (
     <section>

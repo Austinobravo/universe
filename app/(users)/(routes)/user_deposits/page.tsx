@@ -60,15 +60,18 @@ const page = () => {
   }
 
   React.useEffect(() => {
-    const data = async () => {
-      const investment = await getInvestments()
-      setAllInvestment(investment.data)
-      const deposits = await getInvidualDeposits(session?.user.id)
-      setAllDeposit(deposits.data)
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const investment = await getInvestments()
+        setAllInvestment(investment.data)
+        const deposits = await getInvidualDeposits(session?.user.id)
+        setAllDeposit(deposits.data)
+        
+  
+      }
+      data()
       
-
     }
-    data()
   })
   return (
     <section>

@@ -57,12 +57,14 @@ const page = () => {
   }
 
   React.useEffect(() => {
-    const data = async () => {
-      const investment = await getInvestments()
-      setAllInvestment(investment.data)
-      console.log("all",allInvestment)
+    if (typeof window !== "undefined"){
+      const data = async () => {
+        const investment = await getInvestments()
+        setAllInvestment(investment.data)
+        console.log("all",allInvestment)
+      }
+      data()
     }
-    data()
   })
   return (
     <section>

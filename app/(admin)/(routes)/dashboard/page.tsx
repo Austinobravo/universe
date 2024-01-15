@@ -31,7 +31,7 @@ const page = () => {
           setAllDeposits(totalDeposits)
   
         }else{
-          setAllDeposits(deposits.data[0].amount || 0)
+          setAllDeposits(deposits.data[0]?.amount || 0)
           
         }
         
@@ -45,7 +45,7 @@ const page = () => {
           setAllPendingDeposits(pendingDepositsAmount)
           
         }else{
-          setAllPendingDeposits(pendingDeposits[0].amount || 0)
+          setAllPendingDeposits(pendingDeposits[0]?.amount || 0)
         }
         
         
@@ -102,7 +102,7 @@ const page = () => {
             <div className="bg-pink-400  flex px-10 md:w-[350px] w-full py-20 rounded-md ">
               <Book size={50}/>
               <div>
-                <span className="text-xl">USD {allPendingWithdrawal.toFixed(2)} </span>
+                <span className="text-xl">USD {allPendingWithdrawal?.toFixed(2)} </span>
                 <p>Pending Withdrawals</p>
               </div>
             </div>
@@ -121,16 +121,16 @@ const page = () => {
         </div>
         <div className="shadow-2xl  w-full flex flex-col">
           <div className='border-b-2 md:basis-2/3 py-5 flex flex-col items-center justify-center'>
-              <h3 className="text-2xl">USD {(allDeposits).toFixed(2)}</h3>
+              <h3 className="text-2xl">USD {(allDeposits)?.toFixed(2)}</h3>
               <p className="text-xs">Total deposits</p>
           </div>
           <div className="flex flex-row gap-2 justify-center items-center">
             <div className=" border-r-2 pr-2">
-              <span className="font-bold">USD {(allPendingDeposits).toFixed(2)}</span>
+              <span className="font-bold">USD {(allPendingDeposits)?.toFixed(2)}</span>
               <p className="text-xs">Pending deposits</p>
             </div>
             <div>
-              <span className="font-bold">USD {(allApprovedDeposits).toFixed(2)}</span>
+              <span className="font-bold">USD {(allApprovedDeposits)?.toFixed(2)}</span>
               <p className="text-xs">Approved deposits</p>
             </div>
           </div>

@@ -102,9 +102,9 @@ const Page = () => {
   
         // Get the total Balance
         const balance =  await getBalanceDetails()
-        setIndividualNewBalance(balance.data[balance.data.length -1]?.totalBalance)
+        setIndividualNewBalance(balance.data[balance.data.length -1]?.totalDeposits || balance.data[balance.data.length -1]?.totalBalance)
         
-              
+        
         
       } 
       data()
@@ -120,7 +120,7 @@ const Page = () => {
             <h1 className='text-3xl font-bold opacity-80 '>{session?.user?.firstname! && (<>{session.user.firstname}<span>'s</span></>)} Dashboard<small className='text-xs text-black/50 pl-1 line-clamp-1 '>{session?.user.email! && (<>{session.user.email}</>)}</small></h1>
           </div>
           <div className=' flex items-center'>
-            <h2 className='text-sm  font-bold'>Remaining balance:<small className='text-[12px] text-black/50  pl-1'>$ {individualNewBalance.toFixed(2) || 0}</small></h2>
+            <h2 className='text-sm  font-bold'>Remaining balance:<small className='text-[12px] text-black/50  pl-1'>$ {individualNewBalance?.toFixed(2) || (individualDeposit)?.toFixed(2)}</small></h2>
             
           </div>
         </div>
@@ -139,7 +139,7 @@ const Page = () => {
             <div className="bg-pink-400  flex px-10 md:w-[350px] w-full  py-20 rounded-md ">
               <Book size={50}/>
               <div>
-                <span className="text-xl">USD {(individualDeposit).toFixed(2)} </span>
+                <span className="text-xl">USD {(individualDeposit)?.toFixed(2)} </span>
                 <p>Deposits</p>
               </div>
             </div>

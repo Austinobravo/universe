@@ -162,7 +162,7 @@ const page = () => {
                     </div>
                     <div className="flex gap-2">
                         <label htmlFor='agreement'></label>
-                        <input type='checkbox' id='declare' name='declare' className="cursor-pointer" required checked={isDeclared} onClick={()=> setIsDeclared(!isDeclared)}/>
+                        <input type='checkbox' id='declare' name='declare' className="cursor-pointer" required defaultChecked={isDeclared} onClick={()=> setIsDeclared(!isDeclared)}/>
                         <p className="opacity-50" >I agree to universe Terms and Conditions.</p>
                     </div>
                     <div className="flex gap-5 items-center">

@@ -37,6 +37,6 @@ export async function PATCH(req:Request){
         
 
     }catch(error){
-        return NextResponse.error()
+        return NextResponse.json({message: "error", error}, {status:500})
     }
 }

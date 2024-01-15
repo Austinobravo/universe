@@ -27,6 +27,8 @@ const page = () => {
     }
   }
 
+
+
   
   const onSubmit = async (event:any)=>{
     event.preventDefault()
@@ -54,6 +56,12 @@ const page = () => {
       setIsLoading(false)
       
     }
+
+  }
+  const validateForm = (e:any) => {
+    e.preventDefault()
+    setToggleForm(!toggleForm)
+    setTogglePaymentForm(!togglePaymentForm)
 
   }
 
@@ -101,20 +109,22 @@ const page = () => {
           </div>
           {allInvestment.length > 0 && 
             <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
-              <div className="flex justify-between items-center">
+              <div className="flex font-bold justify-between items-center">
               <h3>Select your preferred investment plan</h3>
-              <span className="flex justify-between items-center">View all <ChevronRight size={15}/></span>
 
               </div>
               <div className="flex gap-5 flex-wrap md:flex-nowrap">
                 {allInvestment.map((investment, index) => (
                   <div key={index} className="bg-green-200 rounded-md px-2 space-y-2 py-5 w-full">
-                    <h2 className="text-xl font-bold">{investment.name}</h2>
-                    <p>$ {investment.min} <span className="text-xs">min</span></p>
-                    <p>$ {investment.max} <span className="text-xs">max</span></p>
-                    <p>{investment.period}</p>
+                    <h2 className="text-2xl font-bold py-12 text-center  ">{investment.name}</h2>
+                    <div className='flex gap-5 justify-evenly py-8 border-2 border-black bg-white/50  '>
+                      <p className='font-bold flex flex-col justify-center items-center border-r-2 pr-12 border-black'>$ {investment.min} <span className="text-xs font-normal">min</span></p>
+                      <p className='font-bold flex flex-col justify-center items-center border-r-2 pr-12 border-black'>$ {investment.max} <span className="text-xs font-normal">max</span></p>
+                      <p className='font-bold  text-xl '>{investment.period}</p>
+
+                    </div>
                     <div>
-                    <button className="opacity-80 bg-slate-400 text-white rounded-md border py-2 px-4" onClick={()=>{setFormData({...investment}), setToggleForm(!toggleForm), setPrevMin(investment.min)}} >Invest</button>
+                    <button className="opacity-80 bg-amber-400 hover:bg-amber-400/80 font-bold  rounded-md border w-full py-2 px-4" onClick={()=>{setFormData({...investment}), setToggleForm(!toggleForm), setPrevMin(investment.min)}} >Make A Deposit</button>
                     </div>
                   </div>
 
@@ -157,7 +167,7 @@ const page = () => {
           <div className="p-3 cursor-pointer" onClick={()=>setToggleForm(!toggleForm)}>
           <X size={30} className="ml-auto " />
           </div>
-          <form className="py-7 px-10 space-y-7" >
+          <form className="py-7 px-10 space-y-7" onSubmit={validateForm}>
               <div className="flex-col flex ">
                 <label htmlFor="" className="text-lg font-bold">Plan name</label>
                 <input type="text" value={formData.name} placeholder="Your investment plan" className="w-full border-slate-400 bg-slate-400 border-2 rounded-md p-2" disabled/>
@@ -189,7 +199,7 @@ const page = () => {
                   </select>
               </div>
               </div>
-              <button type="submit" onClick={(e)=>{ e.preventDefault(), setToggleForm(!toggleForm), setTogglePaymentForm(!togglePaymentForm)}} className="px-5 py-1 rounded-md flex text-white  bg-amber-400">Save and Continue <ChevronRight/></button>
+              <button type="submit"  className="px-5 py-1 rounded-md flex text-white  bg-amber-400">Save and Continue <ChevronRight/></button>
           </form>
 
         </div>

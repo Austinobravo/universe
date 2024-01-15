@@ -93,12 +93,12 @@ const page = () => {
 
           </div>
           {allInvestment.length > 0 && 
-            <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full">
-              {/* <div className="flex justify-between items-center">
-              <div></div>
-              <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div>
+            <div className="shadow-2xl mb-12 px-5 py-4 pt-5 rounded-md w-full"> 
+              <div className="flex flex-wrap justify-between items-center">
+              {/* <div></div>
+              <div className="flex justify-between border p-2 items-center mb-2"><span className='pr-2'>Edit</span> <Pencil className='' size={15}/></div> */}
 
-              </div> */}
+              
               <table className='w-full'>
                 <thead>
                   <tr >
@@ -128,6 +128,7 @@ const page = () => {
                 </tbody>
 
               </table>
+              </div> 
             </div>
           }
       {toggleForm &&

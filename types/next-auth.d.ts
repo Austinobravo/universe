@@ -32,3 +32,11 @@ declare module 'next-auth'{
 // declare module 'next-auth/jwt'{
 //     type JWT = User
 // }
+
+// const UserRoles = {
+//     Admin: 'Admin',
+//     User: 'User',
+//   } as const;
+  
+//   type UserRole = typeof UserRoles[keyof typeof UserRoles];
+  

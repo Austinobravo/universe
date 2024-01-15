@@ -64,7 +64,7 @@ const page = () => {
             <div className='bg-sky-400 space-x-2 flex px-10 w-full  py-20 rounded-md'>
               <Landmark size={50}/>
               <div>
-                <span className="text-xl">USD {allDeposits[(allDeposits).length-1]?.amount.toFixed(2)}</span>
+                <span className="text-xl">USD {allDeposits[(allDeposits).length-1]?.amount.toFixed(2) || (0).toFixed(2)}</span>
                 <p>Latest Deposits</p>
               </div>
             </div>
@@ -105,7 +105,7 @@ const page = () => {
                           : (
                             <>
                             <div className='flex flex-wrap md:flex-nowrap gap-1 justify-center'>
-                                <span className='mr-1 bg-pink-400 py-1 px-4 text-xs text-white rounded-sm'>
+                                <span className='mr-1 bg-pink-400 py-1 px-4 text-xs text-white rounded-sm'  onClick={()=>{setToggleForm(!toggleForm), setFormData({...deposit})}}>
                                 Approve
                                 </span>
                                 <span className=' bg-amber-400 py-1 px-4 text-xs text-white rounded-sm'>

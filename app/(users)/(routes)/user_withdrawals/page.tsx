@@ -200,7 +200,7 @@ const page = () => {
                 </div>
                 <div className="flex-col flex w-full">
                   <label htmlFor=""  className="text-lg font-bold">From</label>
-                  <p className="w-full border-slate-400 border-2 rounded-md bg-slate-400 p-2" >{individualNewBalance !== 0 ? (individualNewBalance).toFixed(2) : individualApprovedDeposit ? individualApprovedDeposit.toFixed(2) : (<span className='flex w-fit'>You have no approved funds <Link href="/user_deposits" className='bg-amber-400 py-2 px-3 text-xs rounded-md text-white'>Make a deposit</Link> </span>)}</p>
+                  <p className="w-full border-slate-400 border-2 rounded-md bg-slate-400 p-2" >{individualNewBalance > 0 ? (individualNewBalance)?.toFixed(2) : individualApprovedDeposit ? individualApprovedDeposit?.toFixed(2) : (<span className='flex w-fit'>You have no approved funds <Link href="/user_deposits" className='bg-amber-400 py-2 px-3 text-xs rounded-md text-white'>Make a deposit</Link> </span>)}</p>
                 </div>
               </div>
               <div  className="flex gap-3 flex-wrap md:flex-nowrap w-full">

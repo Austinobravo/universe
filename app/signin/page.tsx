@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signIn, useSession, signOut, getSession } from 'next-auth/react'
 import { Loader, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -19,17 +19,32 @@ const page = () => {
     const router = useRouter()
     const {register, formState:{isValid, errors}, } = useForm({mode: "all", resolver: zodResolver(formSchema)})
     const [isLoading, setIsLoading] = React.useState(false)
+    const [isRememberMeClicked, setIsRememberMeClicked] = React.useState(false)
     const {data:session, status} = useSession()
+    console.log("status", status)
+    console.log("session", session)
+    // if (typeof window !== "undefined"){
+    //     const url = window.location.href
+    //     console.log("url",url)
+    // }
+
     const [user , setUser] = React.useState({
         email: "",
         password: ""
     })
     const [error, setError] = React.useState("")
+
+    
     const Login = async (e:any) => {
         e.preventDefault()
+        
        
             try{
                 setIsLoading(true)
+                // if (isRememberMeClicked){
+                //     document.cookie = ("email=" + user.email + `;path=${url}`)
+                //     document.cookie = ("password=" + user.password + `;path=${url}`)
+                // }
                 const data = await signIn('credentials', {
                     email: user.email,
                     password: user.password,
@@ -75,6 +90,22 @@ const page = () => {
         if(SignOut.url) router.push("/signin")
     }
     
+    const fetchCookie = (cookieName:any) => {
+        const name = cookieName + "="
+        const decodedCookie = decodeURIComponent(document.cookie)
+        const separateCookie = decodedCookie.split(";")
+        for (let char of separateCookie){
+            while (char.charAt(0) === ""){
+                char = char.substring(1)
+            }
+            if (char.indexOf(name) === 0){
+                return char.substring(name.length, char.length)
+            }
+        }
+        return ""
+    
+    }
+    
     if(session?.user){
         return(
             <div className='flex flex-col items-center  space-y-2 py-5'>
@@ -84,6 +115,21 @@ const page = () => {
 
         )
     }
+
+    React.useEffect(()=> {
+        if(typeof window !== "undefined"){
+            const fetchCookieData = () => {
+                const Cookieemail = fetchCookie("email")
+                const Cookiepassword = fetchCookie("password")
+                // Cookieemail ? user.email =  Cookieemail : ""
+                // user.password = Cookiepassword ? Cookiepassword : ""
+                // console.log(document.cookie = ("email=" + user.email + `;path=${url}`),document.cookie = ("password=" + user.password + `;path=${url}`), document.cookie)
+
+
+            }
+            fetchCookieData()
+        }
+    })
 
 
   return (
@@ -129,8 +175,8 @@ const page = () => {
 
                         <div className="flex gap-2">
                             <label htmlFor='agreement'></label>
-                            <input type='checkbox' id='remember' name='remember' className="cursor-pointer" required/>
-                            <p className="opacity-50">Keep me logged in.</p>
+                            <input type='checkbox' id='remember' name='remember' className="cursor-pointer"  onClick={()=>setIsRememberMeClicked(!isRememberMeClicked)}/>
+                            <p className="opacity-50">Remember me</p>
                         </div>
                         <div className="flex gap-5 items-center">
                             <button type="submit" className={` px-3 py-1 rounded-md flex text-white  bg-amber-400`} disabled={isLoading}>{isLoading ? (<><Loader className='animate-spin'/> Login</>  ) : "Login"}</button>

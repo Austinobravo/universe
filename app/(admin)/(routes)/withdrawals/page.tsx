@@ -78,7 +78,7 @@ const page = () => {
             </div>
 
           </div>
-          {allIndividualWithdrawal && 
+          {allIndividualWithdrawal.length > 0 && 
             <div className="shadow-2xl mb-12 px-5  py-5 rounded-md w-full">
               <div className="flex justify-between items-center">
             
@@ -105,7 +105,7 @@ const page = () => {
                         : (
                           <>
                           <div className='flex flex-wrap md:flex-nowrap gap-1 justify-center'>
-                              <span className='mr-1 bg-pink-400 py-1 px-4 text-xs text-white rounded-sm'>
+                              <span className='mr-1 bg-pink-400 py-1 px-4 text-xs text-white rounded-sm' onClick={()=>{setToggleForm(!toggleForm), setFormData({...deposit})}}>
                               Approve
                               </span>
                               <span className=' bg-amber-400 py-1 px-4 text-xs text-white rounded-sm'>

@@ -116,20 +116,20 @@ const page = () => {
         )
     }
 
-    React.useEffect(()=> {
-        if(typeof window !== "undefined"){
-            const fetchCookieData = () => {
-                const Cookieemail = fetchCookie("email")
-                const Cookiepassword = fetchCookie("password")
-                // Cookieemail ? user.email =  Cookieemail : ""
-                // user.password = Cookiepassword ? Cookiepassword : ""
-                // console.log(document.cookie = ("email=" + user.email + `;path=${url}`),document.cookie = ("password=" + user.password + `;path=${url}`), document.cookie)
+    // React.useEffect(()=> {
+    //     if(typeof window !== "undefined"){
+    //         const fetchCookieData = () => {
+    //             const Cookieemail = fetchCookie("email")
+    //             const Cookiepassword = fetchCookie("password")
+    //             // Cookieemail ? user.email =  Cookieemail : ""
+    //             // user.password = Cookiepassword ? Cookiepassword : ""
+    //             // console.log(document.cookie = ("email=" + user.email + `;path=${url}`),document.cookie = ("password=" + user.password + `;path=${url}`), document.cookie)
 
 
-            }
-            fetchCookieData()
-        }
-    })
+    //         }
+    //         fetchCookieData()
+    //     }
+    // })
 
 
   return (

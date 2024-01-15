@@ -25,22 +25,29 @@ export async function POST(req:Request){
 
     
     try{
-        await dbConfig.withdrawals.create({
-            data:{
-                userId: userId,
-                amount: amount,
-                approved:false
-            }
-        })
-        await dbConfig.balance.create({
-            data:{
-                userId: userId,
-                totalDeposits: existingDepositAmount,
-                totalWithdrawals: existingWithdrawalAmount,
-                totalBalance:newBalance,
-                
-            }
-        })
+        
+        await dbConfig.$transaction(async (prisma) => {
+            // Create a new withdrawal
+            const withdrawalData = {
+              userId: userId,
+              amount: amount,
+              approved: false,
+            };
+      
+            const newWithdrawal = await prisma.withdrawals.create({ data: withdrawalData });
+      
+            // Create a new balance
+            const balanceData = {
+              userId: userId,
+              totalDeposits: existingDepositAmount,
+              totalWithdrawals: existingWithdrawalAmount,
+              totalBalance: newBalance,
+              withdrawalId: newWithdrawal.id, // Link the balance to the new withdrawal
+            };
+      
+            await prisma.balance.create({ data: balanceData });
+          });
+      
 
 
 

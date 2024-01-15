@@ -117,9 +117,9 @@ const page = () => {
                 {allInvestment.map((investment, index) => (
                   <div key={index} className="bg-green-200 rounded-md px-2 space-y-2 py-5 w-full">
                     <h2 className="text-2xl font-bold py-12 text-center  ">{investment.name}</h2>
-                    <div className='flex gap-5 justify-evenly py-8 border-2 border-black bg-white/50  '>
-                      <p className='font-bold flex flex-col justify-center items-center border-r-2 pr-12 border-black'>$ {investment.min} <span className="text-xs font-normal">min</span></p>
-                      <p className='font-bold flex flex-col justify-center items-center border-r-2 pr-12 border-black'>$ {investment.max} <span className="text-xs font-normal">max</span></p>
+                    <div className='flex gap-5 justify-evenly py-8 border-2 border-black bg-white/50 w-full items-center px-1 '>
+                      <p className='font-bold flex flex-col justify-center items-center border-r-2 md:pr-12 pr-4 border-black'>$ {investment.min} <span className="text-xs font-normal">min</span></p>
+                      <p className='font-bold flex flex-col justify-center items-center border-r-2 md:pr-12 pr-4 border-black'>$ {investment.max} <span className="text-xs font-normal">max</span></p>
                       <p className='font-bold  text-xl '>{investment.period}</p>
 
                     </div>

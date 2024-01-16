@@ -45,7 +45,7 @@ const page = () => {
         if(response.status === 200) toast.success("Created Successfully"); setTogglePaymentForm(!togglePaymentForm)
       })
       .catch((error)=>{
-        console.error("Api error", error)
+        toast.error(error?.response?.data?.message)
       })
       .finally(()=>{
 

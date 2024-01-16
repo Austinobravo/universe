@@ -25,12 +25,13 @@ export const POST = async (req: Request) => {
     const user = await dbConfig.deposits.findMany({
         where:{
             userId:userId,
+            amount:min,
             name:name
             
         }
     })
 
-    if(user.length >=1 ) return new NextResponse("You've made this deposit", {status:400})
+    if(user.length >=1 ) return  NextResponse.json({message: `You've made a $${min} deposit earlier.`},{status:500})
     try{
       
         const deposit = await dbConfig.deposits.create({

@@ -5,7 +5,6 @@ import Navbar from './(home)/_components/Navbar'
 import Footer from './(home)/_components/Footer'
 import Provider from '@/components/providers/Provider'
 import  ToastProvider  from '@/components/providers/react-toast-provider'
-import { url } from 'inspector'
 
 const inter = Inter({ subsets: ['latin'] })
 

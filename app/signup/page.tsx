@@ -4,8 +4,8 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { Loader } from 'lucide-react'
-import { getSession, signIn } from 'next-auth/react'
+import { Loader, Loader2 } from 'lucide-react'
+import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ErrorMessage } from '@hookform/error-message'
 import { z } from 'zod'
@@ -17,7 +17,7 @@ import toast from 'react-hot-toast'
 const formSchema = z.object({
     firstname: z.string().min(2, "This field must have at least 2 characters"),
     lastname: z.string().min(2, "This field must have at least 2 characters").optional(),
-    email: z.string().email("This must be a valid email").refine(async (value) => { await getExistingEmail(value)}, "Email already exists"),
+    email: z.string().email("This must be a valid email").refine(async (value) =>  await getExistingEmail(value), "Email already exists"),
     password: z.string().min(6,"This field must have at least 6 characters."),
     confirm_password: z.string().min(6, "This field must have at least 6 characters.")
 }).refine((data) => data.password === data.confirm_password,{path:['confirm_password'], message:"Passwords does not match"})
@@ -28,6 +28,7 @@ const page = () => {
     const {register, formState:{isValid, errors},getValues } = useForm<ValidationSchemaType>({mode: "all", resolver: zodResolver(formSchema)})
     const [isDeclared, setIsDeclared] = React.useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const  {data:session, status} = useSession()
     const  [user, setUser] = useState(
         {
             firstname: "",
@@ -100,8 +101,28 @@ const page = () => {
         }
 
     }
+
+    const logOut = async () => {
+        const SignOut = await signOut({redirect:false})
+        if(SignOut.url) router.push("/signin")
+    }
+    
+
+    if(session?.user){
+        return(
+            <div className='flex flex-col items-center  space-y-2 py-5'>
+                <p className='text-center text-2xl'>You are signed in</p>
+                <div className='flex gap-2'>
+                    <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
+                    <Link href={session.user.role === "Admin" ? "/dashboard" : "/user_dashboard"} className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`}>Dashboard</Link>
+                </div>
+            </div>  
+
+        )
+    }
   return (
     <section >
+        {status === "unauthenticated" && 
         <div className='flex  h-[600px] w-full'>
             <div className='dark:bg-gradient-to-tl bg-black from-purple-800 to-blue-800 md:basis-2/3 py-10 justify-between flex-col md:flex hidden  md:pl-10'>
                 <div className='space-y-7 '>
@@ -174,7 +195,13 @@ const page = () => {
                 </form>
             </div>
         </div>
-        
+        }
+        {status === "loading" && (
+            <div className='flex flex-col items-center  space-y-2 py-5'>
+                    <p className='text-center text-2xl'><Loader2 className='animate-spin' size={60}/></p>
+                   
+            </div>  
+        )}
     </section>
   )
 }

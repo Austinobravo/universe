@@ -30,7 +30,7 @@ const page = () => {
   const userId = session?.user.id
 
   const verifyBalance = async (value:any) => {
-    if( value <= individualApprovedDeposit) {
+    if( value <= individualApprovedDeposit && value > 0) {
 
       return true
     }

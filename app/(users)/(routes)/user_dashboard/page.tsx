@@ -146,11 +146,11 @@ const Page = () => {
 
           </div>
           <div className="shadow-2xl px-5 h-40 pt-5 rounded-md w-full">
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
             <h3>Today's Payouts</h3>
             <span className="flex justify-between items-center">View all <ChevronRight size={15}/></span>
 
-            </div>
+            </div> */}
 
 
           </div>

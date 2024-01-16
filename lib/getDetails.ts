@@ -5,7 +5,7 @@ import axios from "axios"
 export const getExistingEmail = async (value:string) => {
     const users = await getUsers()
     const existingEmail = users.data.find((each:any)=> each.email === value)
-    return existingEmail
+    return !(!!existingEmail)
 }
 export const getUsers = async () => {
     const apiCall = await axios.get("/api/users")

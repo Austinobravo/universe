@@ -25,7 +25,7 @@ const Hero = () => {
                 <div className="md:basis-1/2 py-20 space-y-7 md:text-left text-center">
                     <h1 className='md:text-5xl md:pt-10 text-2xl font-bold leading-snug'>The most reliable & comprehensive cryptocurrency platform for traders and developers</h1>
                     <div >
-                        <button className='bg-amber-400  text-white py-4 px-10 font-bold rounded-md'>Get Started</button>
+                        <Link href="/signin" className='bg-amber-400  text-white py-4 px-10 font-bold rounded-md'>Get Started</Link>
                     </div>
 
                 </div>

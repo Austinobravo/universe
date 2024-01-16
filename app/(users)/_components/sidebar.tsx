@@ -72,8 +72,8 @@ const Sidebar = () => {
                                     {itemsToggle && current === index &&
                                     <div className={`flex-col flex pl-8 pt-4 gap-y-3 ${itemsToggle && 'bg-slate-500'}`}>
                                         {each.children?.map((child, index) => (
-                                            <div onClick={()=>{setActive(each.name), setItemsToggle(!itemsToggle), setToggle(!toggle)}}   className='hover:text-white'>
-                                            <Link key={index} href={child.href} className='hover:text-white' >
+                                            <div key={index} onClick={()=>{setActive(each.name), setItemsToggle(!itemsToggle), setToggle(!toggle)}}   className='hover:text-white'>
+                                            <Link href={child.href} className='hover:text-white' >
                                                 {child.type} 
                                             </Link>
                                             </div>

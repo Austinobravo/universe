@@ -21,8 +21,6 @@ const page = () => {
     const [isLoading, setIsLoading] = React.useState(false)
     const [isRememberMeClicked, setIsRememberMeClicked] = React.useState(false)
     const {data:session, status} = useSession()
-    console.log("status", status)
-    console.log("session", session)
     // if (typeof window !== "undefined"){
     //     const url = window.location.href
     //     console.log("url",url)
@@ -51,7 +49,6 @@ const page = () => {
                     redirect: false,
                     
                 })
-                console.log("data", data)
     
                 if(data?.error) setError(data.error); else setError("")
     
@@ -110,7 +107,10 @@ const page = () => {
         return(
             <div className='flex flex-col items-center  space-y-2 py-5'>
                 <p className='text-center text-2xl'>You are signed in</p>
-                <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
+                <div className='flex gap-2'>
+                    <button className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`} onClick={logOut}>Logout</button>
+                    <Link href={session.user.role === "Admin" ? "/dashboard" : "/user_dashboard"} className={` px-3 py-1 rounded-md w-fit text-white  bg-amber-400`}>Dashboard</Link>
+                </div>
             </div>  
 
         )

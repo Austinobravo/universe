@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} dark`}><Provider><ToastProvider/><Navbar/><div className="pt-16">{children}</div> <Footer/></Provider></body>
+      <body className={`${inter.className} dark `}><Provider><ToastProvider/><Navbar/><div className="pt-16">{children}</div> <Footer/></Provider></body>
     </html>
   )
 }

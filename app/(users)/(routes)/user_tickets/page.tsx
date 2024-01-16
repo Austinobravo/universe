@@ -1,15 +1,20 @@
 "use client"
 import { X } from 'lucide-react'
+import Image from 'next/image'
 import React from 'react'
 
 const page = () => {
   const [toggleForm, setToggleForm] = React.useState(false)
 
   return (
-    <section>
-      <div className="py-2 px-4 w-full bg-white flex items-center justify-between border rounded-md">
+    <section className=''>
+      {/* <div className="py-2 px-4 w-full bg-white flex items-center justify-between border rounded-md">
         <p className="o">Name</p>
         <button className="opacity-80 bg-whitee rounded-md border py-2 px-4" onClick={()=>setToggleForm(!toggleForm)}>Create Ticket</button>
+      </div> */}
+      <div className='flex flex-col items-center justify-center'>
+        <Image src="/logo-color.png" width={100} height={100} alt='logo'/>
+        <p className='text-2xl py-5'>Coming Soon. </p>
       </div>
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">

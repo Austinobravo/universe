@@ -1,13 +1,48 @@
 "use client"
 import {getUsers} from '@/lib/getDetails'
-import {  Pencil, Users, UsersRound, X } from 'lucide-react'
+import axios from 'axios'
+import {  Loader, Pencil, PencilIcon, Users, UsersRound, X } from 'lucide-react'
 import React from 'react'
+import toast from 'react-hot-toast'
 
 const page = () => {
 
   const [toggleForm, setToggleForm] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
   const [allUsers, setAllUsers] = React.useState<any[]>([])
   const [allAdmin, setAllAdmin] = React.useState<any[]>([])
+  const [formData, setFormData] = React.useState({firstName:"", lastName:"", email:"", role:""})
+  const roles = ["Admin", "User"]
+
+  const onSubmit = async (e:any) => {
+    e.preventDefault()
+
+
+    try{
+      setIsLoading(true)
+      await axios.patch("/api/users", formData)
+      .then((response) => {
+        if (response.status === 200) toast.success("Updated successfully"), setToggleForm(!toggleForm), location.reload()
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+
+
+    }
+  catch(error){
+    toast.error("An error occured")
+  }
+}
+
+  const onChange = (e:any) => {
+    e.preventDefault()
+    const {name, value} = e.target
+    console.log("form", name, value)
+    setFormData({...formData, [name]: value})
+  }
+
+
 
   React.useEffect(() => {
     if (typeof window !== "undefined"){
@@ -23,7 +58,7 @@ const page = () => {
       data()
       
     }
-  }, [])
+  }, [allUsers, allAdmin])
   return (
     <section>
       <div className='py-2 '>
@@ -60,6 +95,7 @@ const page = () => {
                     <th >Last Name</th>
                     <th >Email</th>
                     <th >Role</th>
+                    <th></th>
                   </tr>
 
                 </thead>
@@ -71,6 +107,7 @@ const page = () => {
                         <td >{user.lastName}</td>
                         <td >{user.email}</td>
                         <td >{user.role}</td>
+                        <td className='flex border-0 items-center bg-amber-400 cursor-pointer hover:bg-amber-300' onClick={()=> {setFormData({...user}), setToggleForm(!toggleForm)}}><PencilIcon  className='mx-1 w-4 h-4'/> Edit</td>
                       </tr>
                   
 
@@ -83,28 +120,36 @@ const page = () => {
           }
       {toggleForm &&
       <div className="bg-black/50 flex overflow-y-scroll pt-60 w-full h-full items-center justify-center z-50 top-0 left-0 fixed ">
-        <div className="bg-white shadow  rounded-md md:w-[600px] w-full md:-mt-[400px]">
+        <div className="bg-white shadow md:-mb-56 rounded-md md:w-[600px] w-full md:-mt-[400px]">
           <div className="p-3 cursor-pointer" onClick={()=>setToggleForm(!toggleForm)}>
           <X size={30} className="ml-auto " />
           </div>
-          <form className="py-7 px-10 space-y-7">
+          <form className="py-7 px-10 space-y-7" onSubmit={onSubmit}>
               <div className="flex-col flex ">
-                <label htmlFor="" className="text-lg font-bold">Email</label>
-                <input type="email" placeholder="Email" className="w-full border-slate-400 border-2 rounded-md p-2"/>
+                <label htmlFor="email" className="text-lg font-bold">Email</label>
+                <input type="email" placeholder="Email" name="email" onChange={onChange} value={formData.email} className="w-full border-slate-400 border-2 rounded-md p-2"/>
               </div>
               <div className="flex gap-3 flex-wrap md:flex-nowrap w-full">
                 <div className="flex-col  flex w-full ">
-                <label htmlFor="" className="text-lg font-bold">First name</label>
-                <input type="text" placeholder="First name" className="w-full border-slate-400 border-2 rounded-md p-2"/>
+                <label htmlFor="firstname" className="text-lg font-bold">First name</label>
+                <input type="text" placeholder="First name" name="firstName" onChange={onChange} value={formData.firstName} className="w-full border-slate-400 border-2 rounded-md p-2"/>
                 </div>
                 <div className="flex-col flex w-full">
-                  <label htmlFor=""  className="text-lg font-bold">Last name</label>
-                  <input type="text" placeholder="Last name" className="w-full border-slate-400 border-2 rounded-md p-2"/>
-      
+                  <label htmlFor="lastname"  className="text-lg font-bold">Last name</label>
+                  <input type="text" placeholder="Last name"  name="lastName" onChange={onChange} value={formData.lastName} className="w-full border-slate-400 border-2 rounded-md p-2"/>
                 </div>
               </div>
+              <div className="flex-col flex w-full ">
+                  <label htmlFor="type"  className="text-lg font-bold">Role</label>
+                  <select className="w-full border-slate-400 border-2 rounded-md p-2" name="role" onChange={onChange}>
+                    <option >--select--</option>
+                      {roles.map((role, index)=> (
+                        <option key={index}>{role === formData.role ? formData.role : role}</option>
+                      ))}
+                  </select>
+              </div>
 
-              <button type="submit" className="px-5 py-1 rounded-md  text-white  bg-amber-400">Save</button>
+              <button type="submit" className="px-5 py-1 rounded-md  text-white  bg-amber-400">{isLoading ? (<><span className='flex'><Loader className='animate-spin' />Updating...</span></> ) : "Update"}</button>
           </form>
 
         </div>

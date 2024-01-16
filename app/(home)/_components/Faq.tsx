@@ -9,11 +9,11 @@ const items = [
     },
     {
         question: "How to earn from crypto on Universe?",
-        answer: "Users can earn rewards on more than 180+ cryptocurrencies by using one of the products offered on Binance Earn. Our platform offers dozens of digital assets like Bitcoin, Ethereum, and stablecoins."
+        answer: "Users can earn rewards on more than 180+ cryptocurrencies by using one of the products offered on Universe Earn. Our platform offers dozens of digital assets like Bitcoin, Ethereum, and stablecoins."
     },
     {
-        question: "How to buy Bitcoin and other cryptocurrencies on Binance?",
-        answer: "There are several ways to buy cryptocurrencies on Binance. You can use a credit/debit card, cash balance, or Apple Pay/Google Pay to purchase crypto on Binance. Before getting started, please make sure you’ve completed Identity Verification for your Binance account."
+        question: "How to buy Bitcoin and other cryptocurrencies on Universe?",
+        answer: "There are several ways to buy cryptocurrencies on Universe. You can use a credit/debit card, cash balance, or Apple Pay/Google Pay to purchase crypto on Universe. Before getting started, please make sure you’ve completed Identity Verification for your Universe account."
     },
 
 ]

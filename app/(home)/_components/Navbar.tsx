@@ -16,12 +16,12 @@ const Navbar = ({}) => {
     const navlinks = [
         {
             icon: Bitcoin,
-            href: "",
+            href: "/crypto",
             name: "Buy Crypto"
         },
         {
             icon: ShipWheel,
-            href: "",
+            href: "/market",
             name: "Markets"
         },
         {
@@ -31,7 +31,7 @@ const Navbar = ({}) => {
         },
         {
             icon: BookUser,
-            href: "",
+            href: "/contact",
             name: "Contact Us"
         },
     ]
@@ -58,7 +58,7 @@ const Navbar = ({}) => {
             <div className="flex space-x-2">
                 <div >
                     <Link href="/" >
-                        <Image src="/home/logo-no-background.png" width={100} height={1} alt="Logo"/>
+                        <Image src="/home/logo-no-background.png" width={100} height={1} alt="Logo" priority/>
                     </Link>
 
                 </div>

@@ -17,6 +17,7 @@ const Hero = () => {
             fetchData()
         }
     }, [])
+    
 
     return (
         <>
@@ -29,6 +30,8 @@ const Hero = () => {
                     </div>
 
                 </div>
+
+
                 <div className="md:basis-1/2 md:py-20 ">
                     <div className="bg-black/50 dark:bg-white/20 mx-auto py-10 px-5 space-y-4  w-full rounded-md">
                         {allCoins.slice(0,7)?.map((coin, index) => (

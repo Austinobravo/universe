@@ -3,12 +3,6 @@ import  bcrypt  from 'bcrypt';
 import type { NextAuthOptions } from "next-auth";
 
 import dbConfig from "@/lib/dbConfig";
-import { z } from 'zod';
-
-const loginUserSchema = z.object({
-    email: z.string().email("This field must be an email."),
-    password: z.string().min(6, "This must have at least 6 characters.")
-})
 
 export const options:NextAuthOptions = {
     providers: [

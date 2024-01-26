@@ -5,6 +5,7 @@ import Navbar from './(home)/_components/Navbar'
 import Footer from './(home)/_components/Footer'
 import Provider from '@/components/providers/Provider'
 import  ToastProvider  from '@/components/providers/react-toast-provider'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} dark `}><Provider><ToastProvider/><Navbar/><div className="pt-16">{children}</div> <Footer/></Provider></body>
+      <body className={`${inter.className} dark `}><Provider><ToastProvider/><Navbar/><div className="pt-16">{children}</div> <Footer/></Provider><Analytics/></body>
     </html>
   )
 }
